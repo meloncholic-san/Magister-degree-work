@@ -79,3 +79,17 @@ body {
     cursor: pointer;
 }
  
+.message {
+    margin-bottom: 12px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.message p {
+    margin: 0;
+}
+
+.message span {
+    font-size: 0.8em;
+    color: #666;
+}

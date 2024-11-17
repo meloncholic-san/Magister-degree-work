@@ -127,13 +127,60 @@ const ChatModule = () => {
         <div className="chat-container">
             <h2>Чат</h2>
             {user && <p>Ласкаво просимо, {user.firstName} {user.lastName}!</p>}
-            <div className="messages-container">
+            {/* <div className="messages-container">
                 {messages.map((msg, index) => (
                     <div key={index} className="message">
                         {msg.text}
                     </div>
                 ))}
+            </div> */}
+            
+
+            <div className="messages-container">
+    {messages && messages.length > 0 ? (
+        messages.map((msg, index) => (
+            <div key={index} className="message">
+                <p>
+                    <strong>
+                        {msg.user?.firstName} {msg.user?.lastName} (Квартира {msg.user?.apartment}):
+                    </strong>
+                </p>
+                <p>{msg.text}</p>
+                <span>
+                    {msg.createdAt ? new Date(msg.createdAt).toLocaleString() : 'Нет даты'}
+                </span>
             </div>
+        ))
+    ) : (
+        <p>Сообщений нет</p>
+    )}
+</div>
+
+
+            {/* <div className="messages-container">
+    {messages && messages.length > 0 ? (
+        messages.map((msg, index) => (
+            <div key={index} className="message">
+                <p><strong>{msg.user?.firstName} {msg.user?.lastName} (Квартира {msg.user?.apartment}):</strong></p>
+                <p>{msg.text}</p>
+                <span>{msg.createdAt ? new Date(msg.createdAt).toLocaleString() : 'Нет даты'}</span>
+            </div>
+        ))
+    ) : (
+        <p>Сообщений нет</p>
+    )}
+</div> */}
+
+            {/* <div className="messages-container">
+    {messages.map((msg, index) => (
+        <div key={index} className="message">
+            <p><strong>{msg.user.firstName} {msg.user.lastName} (Квартира {msg.user.apartment}):</strong></p>
+            <p>{msg.text}</p>
+            <span>{new Date(msg.createdAt).toLocaleString()}</span>
+        </div>
+    ))}
+</div> */}
+
             <form onSubmit={handleSubmit} className="form">
                 <input
                     type="text"

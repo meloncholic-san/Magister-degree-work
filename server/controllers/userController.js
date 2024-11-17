@@ -173,11 +173,13 @@ exports.loginUser = async (req, res) => {
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                apartmentNumber: user.apartmentNumber, // Додано поле
                 role: user.role,
             },
             process.env.JWT_SECRET,
-            { expiresIn: '10h' } // Термін дії токена — 10 годин
+            { expiresIn: '10h' }
         );
+        
 
         res.json({ message: 'Вхід успішний', token });
     } catch (error) {

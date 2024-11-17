@@ -17,7 +17,7 @@
 // };
 
 // module.exports = authMiddleware;
-
+// server/middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 
 exports.verifyToken = (req, res, next) => {
