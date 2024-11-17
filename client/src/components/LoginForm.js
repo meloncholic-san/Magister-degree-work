@@ -146,6 +146,7 @@
 // client/src/components/LoginForm.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({
@@ -174,12 +175,26 @@ const LoginForm = () => {
             });
 
             const data = await response.json();
+            // if (response.ok) {
+            //     alert('Вхід успішний');
+            //     // Зберігаємо токен в localStorage
+            //     localStorage.setItem('token', data.token);
+            //     navigate('/'); // Перенаправлення на головну сторінку після успішного входу
+            // } 
             if (response.ok) {
                 alert('Вхід успішний');
                 // Зберігаємо токен в localStorage
                 localStorage.setItem('token', data.token);
-                navigate('/'); // Перенаправлення на головну сторінку після успішного входу
-            } else {
+            
+                // Декодуємо токен для отримання імені та прізвища
+                const decoded = jwtDecode(data.token);
+                console.log(`Вітаємо, ${decoded.firstName} ${decoded.lastName}!`);
+            
+                navigate('/'); // Перенаправлення на головну сторінку
+            }
+            
+            
+            else {
                 setError(data.message || 'Помилка входу');
             }
         } catch (error) {

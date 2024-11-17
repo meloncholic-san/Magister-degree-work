@@ -121,6 +121,35 @@ const exportCollectionToCSV = () => {
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+// exports.loginUser = async (req, res) => {
+//     try {
+//         const { username, password } = req.body;
+
+//         // Знайти користувача за логіном (username)
+//         const user = await User.findOne({ username });
+//         if (!user) {
+//             return res.status(400).json({ message: 'Невірний логін або пароль' });
+//         }
+
+//         // Перевірити пароль
+//         const isMatch = await bcrypt.compare(password, user.password);
+//         if (!isMatch) {
+//             return res.status(400).json({ message: 'Невірний логін або пароль' });
+//         }
+
+//         // Створення JWT токену
+//         const token = jwt.sign(
+//             { userId: user._id, username: user.username },
+//             process.env.JWT_SECRET,
+//             { expiresIn: '10h' } // Термін дії токена — 4 годинu
+//         );
+
+//         res.json({ message: 'Вхід успішний', token });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Помилка сервера' });
+//     }
+// };
 exports.loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -137,11 +166,17 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: 'Невірний логін або пароль' });
         }
 
-        // Створення JWT токену
+        // Створення JWT токену (включено ім'я, прізвище та роль)
         const token = jwt.sign(
-            { userId: user._id, username: user.username },
+            {
+                userId: user._id,
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role,
+            },
             process.env.JWT_SECRET,
-            { expiresIn: '10h' } // Термін дії токена — 4 годинu
+            { expiresIn: '10h' } // Термін дії токена — 10 годин
         );
 
         res.json({ message: 'Вхід успішний', token });

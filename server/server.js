@@ -77,3 +77,7 @@ app.use('/api/users', userRoutes);
 app.listen(PORT, () => {
     console.log(`Сервер запущено на порту ${PORT}`);
 });
+
+
+const chatRoutes = require('./routes/chatRoutes');
+app.use('/api/messages', chatRoutes);
