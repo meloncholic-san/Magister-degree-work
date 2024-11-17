@@ -94,7 +94,7 @@ const { verifyToken } = require('../middleware/authMiddleware'); // Імпорт
 // Отримати всі повідомлення, відсортовані від найновішого до найстарішого
 router.get('/', async (req, res) => {
     try {
-        const messages = await Message.find().sort({ createdAt: -1 }); // Сортуємо по полю createdAt, -1 для від найновішого
+        const messages = await Message.find() //.sort({ createdAt: -1 }); // Сортуємо по полю createdAt, -1 для від найновішого
         res.json(messages);
     } catch (error) {
         res.status(500).json({ message: 'Помилка сервера' });
