@@ -93,16 +93,26 @@ body {
     font-size: 0.8em;
     color: #666;
 }
-
+/* Стиль для кнопки удаления (урны) */
 .delete-button {
     background: none;
     border: none;
     color: red;
     cursor: pointer;
-    font-size: 1.2rem;
-    margin-left: 10px;
+    font-size: 1rem; /* Уменьшаем размер */
+    position: absolute; /* Позиционируем кнопку в правом верхнем углу */
+    top: 5px;
+    right: 5px;
 }
 
 .delete-button:hover {
     color: darkred;
+}
+
+/* Стиль для контейнера сообщения, чтобы урна не накладывалась на текст */
+.message {
+    position: relative; /* Устанавливаем относительно позиционирования для размещения кнопки */
+    margin-bottom: 12px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
 }

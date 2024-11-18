@@ -44,6 +44,9 @@ router.post('/', verifyToken, async (req, res) => {
 
 
 // Удаление сообщения (только если сообщение создано пользователем или пользователь - админ)
+
+
+// server/routes/chatRoutes.js
 router.delete('/:id', verifyToken, async (req, res) => {
     try {
         const messageId = req.params.id;
@@ -59,8 +62,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
         const isAdmin = user.role === 'admin';
         const isOwner =
             user.firstName === message.user.firstName &&
-            user.lastName === message.user.lastName &&
-            user.apartmentNumber === message.user.apartment;
+            user.lastName === message.user.lastName;
 
         if (!isAdmin && !isOwner) {
             return res.status(403).json({ message: 'Видалення заборонено' });
@@ -74,6 +76,8 @@ router.delete('/:id', verifyToken, async (req, res) => {
         res.status(500).json({ message: 'Помилка сервера' });
     }
 });
+
+
 
 
 module.exports = router;

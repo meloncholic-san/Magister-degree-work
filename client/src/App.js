@@ -1,18 +1,3 @@
-// client/src/App.js
-// import React from 'react';
-// import RegisterForm from './components/RegisterForm';
-
-// const App = () => {
-//     return (
-//         <div>
-//             <h1>Ласкаво просимо до системи ОСББ</h1>
-//             <RegisterForm />
-//         </div>
-//     );
-// };
-
-// export default App;
-
 
 // client/src/App.js
 import React from 'react';
