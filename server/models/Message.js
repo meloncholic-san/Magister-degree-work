@@ -28,7 +28,7 @@ const messageSchema = new mongoose.Schema({
         default: Date.now,
     },
     user: {
-        id: { type: String, required: true }, // ID пользователя
+        //id: { type: String, required: true }, // ID пользователя может не работать
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         apartment: { type: String, required: true },
