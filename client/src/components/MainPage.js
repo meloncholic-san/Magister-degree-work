@@ -1,6 +1,7 @@
 //client/src/components/MainPage.js
 import React from 'react';
 import ChatModule from './ChatModule';
+import VotingModule from './VotingModule'; // Импортируем VotingModule
 
 const MainPage = () => {
     return (
@@ -16,7 +17,7 @@ const MainPage = () => {
                 </section>
                 <section className="module">
                     <h2>Модуль прийняття колективних рішень</h2>
-                    <p>Місце для модуля прийняття рішень</p>
+                    <VotingModule /> {/* Вставляем VotingModule */}
                 </section>
                 <section className="module">
                     <h2>Фінансовий модуль</h2>

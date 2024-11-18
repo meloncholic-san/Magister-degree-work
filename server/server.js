@@ -32,8 +32,9 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/messages', chatRoutes);
 
+
 // Подключаем маршруты голосования
-const voteRoutes = require('./routes/votes.js');
+const voteRoutes = require('./routes/Votes.js');
 app.use('/api/votes', voteRoutes);
 
 
