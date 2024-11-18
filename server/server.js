@@ -1,51 +1,6 @@
-// // server.js
-// require('dotenv').config({ path: './server/config/.env' });  // Завантажуємо змінні з .env
-// 1
-// const express = require('express');
-// const connectDB = require('./db');
-// const userRoutes = require('./routes/userRoutes');
-
-// const app = express();
-
-// // Підключення до MongoDB
-// connectDB();
-
-// // Middleware для обробки JSON
-// app.use(express.json());
-
-// // Використання роутів
-// app.use('/api/users', userRoutes);
-
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//     console.log(`Сервер запущено на порту ${PORT}`);
-// });
 
 // server/server.js
-// require('dotenv').config( { path: './server/config/.env' } );
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const userRoutes = require('./routes/userRoutes');
 
-// const app = express();
-// const PORT = process.env.PORT || 5000;
-
-// // Підключення до MongoDB
-// mongoose.connect(process.env.MONGO_URI)
-//     .then(() => console.log('MongoDB connected'))
-//     .catch((err) => console.error('MongoDB connection error:', err));
-
-// // Middleware для обробки JSON
-// app.use(express.json());
-
-// // Підключення роутів
-// app.use('/api/users', userRoutes);
-
-// app.listen(PORT, () => {
-//     console.log(`Сервер запущено на порту ${PORT}`);
-// });
-
-// server/server.js
 require('dotenv').config( { path: './server/config/.env' });
 const express = require('express');
 const cors = require('cors');
@@ -55,6 +10,9 @@ const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+
+const chatRoutes = require('./routes/chatRoutes');
 
 // Підключення до MongoDB
 connectDB();
@@ -72,6 +30,12 @@ app.use(express.json());
 
 // Підключення роутів
 app.use('/api/users', userRoutes);
+app.use('/api/messages', chatRoutes);
+
+// Подключаем маршруты голосования
+const voteRoutes = require('./routes/votes.js');
+app.use('/api/votes', voteRoutes);
+
 
 // Запуск сервера
 app.listen(PORT, () => {
@@ -79,5 +43,5 @@ app.listen(PORT, () => {
 });
 
 
-const chatRoutes = require('./routes/chatRoutes');
-app.use('/api/messages', chatRoutes);
+
+
