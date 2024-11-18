@@ -1,12 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const voteController = require('../controllers/voteController');
-const { verifyToken } = require('../middleware/authMiddleware');
 
-// Роуты голосования
-router.get('/current', verifyToken, voteController.getCurrentVote);
-router.get('/history', verifyToken, voteController.getVoteHistory);
-router.post('/', verifyToken, voteController.createVote);
-router.post('/vote', verifyToken, voteController.vote);
+//server/routes/votes
+const express = require('express');
+const { verifyToken } = require('../middleware/authMiddleware'); // Импорт middleware
+const {
+  getCurrentVote,
+  getVoteHistory,
+  createVote,
+  vote,
+} = require('../controllers/voteController');
+
+const router = express.Router();
+
+// Защищенные маршруты с использованием authMiddleware
+router.get('/current', verifyToken, getCurrentVote);
+router.get('/history', verifyToken, getVoteHistory);
+router.post('/create', verifyToken, createVote);
+router.post('/vote', verifyToken, vote); // Обробник для POST-запиту
 
 module.exports = router;
