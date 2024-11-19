@@ -116,3 +116,31 @@ body {
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
+
+
+
+
+/* client/src/components/VotingModule.css */
+
+.vote-container {
+    display: flex;
+    height: 30px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: #e0e0e0; /* Цвет фона */
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  
+  .vote-option {
+    height: 100%;
+  }
+  
+  .vote-option.yes {
+    background-color: blue; /* Цвет для "да" */
+  }
+  
+  .vote-option.no {
+    background-color: red; /* Цвет для "нет" */
+  }
+  
