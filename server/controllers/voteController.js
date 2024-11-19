@@ -1,6 +1,14 @@
-//server/controllers/voteController.js
+// server/controllers/voteController.js
 
 const Vote = require('../models/Vote');
+
+// Функция для подсчета голосов
+const countVotes = (votes) => {
+  const yesVotes = votes.filter(vote => vote.option === 'yes').length;
+  const noVotes = votes.filter(vote => vote.option === 'no').length;
+  const totalVotes = votes.length;
+  return { yesVotes, noVotes, totalVotes };
+};
 
 // Получение текущего голосования
 exports.getCurrentVote = async (req, res) => {
@@ -9,7 +17,17 @@ exports.getCurrentVote = async (req, res) => {
     if (!currentVote) {
       return res.status(404).json({ message: 'Текущего голосования нет' });
     }
-    res.json(currentVote);
+
+    // Получаем подсчет голосов для текущего голосования
+    const { yesVotes, noVotes, totalVotes } = countVotes(currentVote.votes);
+
+    // Добавляем информацию о голосах в ответ
+    res.json({
+      ...currentVote.toObject(),
+      yesVotes,
+      noVotes,
+      totalVotes
+    });
   } catch (error) {
     res.status(500).json({ message: 'Ошибка при получении текущего голосования' });
   }
@@ -19,12 +37,21 @@ exports.getCurrentVote = async (req, res) => {
 exports.getVoteHistory = async (req, res) => {
   try {
     const votesHistory = await Vote.find();
-    res.json(votesHistory);
+    // Подсчитываем голоса для каждого голосования в истории
+    const votesWithCounts = votesHistory.map(vote => {
+      const { yesVotes, noVotes, totalVotes } = countVotes(vote.votes);
+      return {
+        ...vote.toObject(),
+        yesVotes,
+        noVotes,
+        totalVotes
+      };
+    });
+    res.json(votesWithCounts);
   } catch (error) {
     res.status(500).json({ message: 'Ошибка при получении истории голосований' });
   }
 };
-
 // Создание нового голосования
 exports.createVote = async (req, res) => {
   const { question, options } = req.body;
@@ -41,79 +68,6 @@ exports.createVote = async (req, res) => {
     res.status(500).json({ message: 'Ошибка при создании голосования' });
   }
 };
-
-// exports.vote = async (req, res) => {
-//   try {
-//       const { voteId, option } = req.body;
-//       const userId = req.user.userId; // Извлекаем userId из токена
-
-//       console.log('Received vote:', { voteId, option, userId }); // Лог для проверки входных данных и userId
-
-//       if (!voteId || !option) {
-//           return res.status(400).json({ error: 'voteId and option are required' });
-//       }
-
-//       // Находим голосование
-//       const vote = await Vote.findById(voteId);
-//       console.log('Vote found:', vote); // Лог наличия голосования
-
-//       if (!vote) {
-//           return res.status(404).json({ error: 'Vote not found' });
-//       }
-
-//       // Обновляем результаты голосования
-//       vote.results[option] = (vote.results[option] || 0) + 1;
-//       await vote.save();
-//       console.log('Vote saved:', { vote, userId }); // Лог после сохранения голоса
-
-//       res.status(200).json({ message: 'Vote recorded successfully' });
-//   } catch (error) {
-//       console.error('Error handling vote:', error); // Лог ошибки
-//       res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// };
-
-// exports.vote = async (req, res) => {
-//   try {
-//     const { voteId, option } = req.body;
-//     const userId = req.user.userId; // Витягуємо userId із токена
-
-//     console.log('Received vote:', { voteId, option, userId }); // Лог для перевірки даних
-
-//     if (!voteId || !option) {
-//       return res.status(400).json({ error: 'voteId and option are required' });
-//     }
-
-//     // Знаходимо голосування
-//     const vote = await Vote.findById(voteId);
-//     if (!vote) {
-//       return res.status(404).json({ error: 'Vote not found' });
-//     }
-
-//     // Перевіряємо, чи вже голосував цей користувач
-//     const existingVote = vote.votes.find((v) => v.userId.toString() === userId);
-//     if (existingVote) {
-//       return res.status(400).json({ error: 'User has already voted' });
-//     }
-
-//     // Додаємо голос користувача
-//     vote.votes.push({ userId, option });
-
-//     // Оновлюємо підрахунок голосів
-//     vote.results.set(option, (vote.results.get(option) || 0) + 1);
-
-//     // Зберігаємо оновлені дані
-//     await vote.save();
-
-//     console.log('Vote saved:', { vote, userId }); // Лог після збереження
-
-//     res.status(200).json({ message: 'Vote recorded successfully' });
-//   } catch (error) {
-//     console.error('Error handling vote:', error); // Лог помилки
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// };
-
 
 exports.vote = async (req, res) => {
   try {
@@ -134,7 +88,13 @@ exports.vote = async (req, res) => {
     // Перевіряємо, чи користувач уже голосував
     const existingVote = vote.votes.find((v) => v.userId && v.userId.toString() === userId);
     if (existingVote) {
-      return res.status(400).json({ error: 'User has already voted' });
+      // Вернемо детальный ответ, что пользователь уже проголосовал
+      return res.status(409).json({
+        error: 'User has already voted',
+        message: 'You have already cast your vote. You cannot vote again.',
+        status: 'conflict',
+        previousVote: existingVote.option, // Добавляем информацию о предыдущем голосе
+      });
     }
 
     // Додаємо новий голос
@@ -151,4 +111,4 @@ exports.vote = async (req, res) => {
     console.error('Error handling vote:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-}; 
+};
