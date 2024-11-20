@@ -36,7 +36,17 @@ exports.getCurrentVote = async (req, res) => {
 // Получение истории голосований
 exports.getVoteHistory = async (req, res) => {
   try {
-    const votesHistory = await Vote.find();
+    // Фильтруем голосования, чтобы получить только те, которые завершены
+    const votesHistory = await Vote.find({ status: 'completed' });
+
+    // Функция для подсчета голосов
+    const countVotes = (votes) => {
+      const yesVotes = votes.filter(vote => vote.option === 'yes').length;
+      const noVotes = votes.filter(vote => vote.option === 'no').length;
+      const totalVotes = votes.length;
+      return { yesVotes, noVotes, totalVotes };
+    };
+
     // Подсчитываем голоса для каждого голосования в истории
     const votesWithCounts = votesHistory.map(vote => {
       const { yesVotes, noVotes, totalVotes } = countVotes(vote.votes);
@@ -47,11 +57,13 @@ exports.getVoteHistory = async (req, res) => {
         totalVotes
       };
     });
+
     res.json(votesWithCounts);
   } catch (error) {
     res.status(500).json({ message: 'Ошибка при получении истории голосований' });
   }
 };
+
 // Создание нового голосования
 exports.createVote = async (req, res) => {
   const { question, options } = req.body;

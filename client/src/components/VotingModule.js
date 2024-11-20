@@ -1,5 +1,5 @@
 // client/src/components/VotingModule.js
-// client/src/components/VotingModule.js
+
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -78,16 +78,19 @@ const VotingModule = () => {
         {currentVote ? (
           <div>
             <p>{currentVote.question}</p>
-            <div className="vote-container">
-              <div 
-                className="vote-option yes"
-                style={{ width: `${getVotePercentage(currentVote.votes, 'yes')}%` }}
-              ></div>
-              <div 
-                className="vote-option no"
-                style={{ width: `${getVotePercentage(currentVote.votes, 'no')}%` }}
-              ></div>
-            </div>
+            {/* Показываем прогресс-бар только если голосование активно */}
+            {currentVote.status === 'active' && (
+              <div className="vote-container">
+                <div 
+                  className="vote-option yes"
+                  style={{ width: `${getVotePercentage(currentVote.votes, 'yes')}%` }}
+                ></div>
+                <div 
+                  className="vote-option no"
+                  style={{ width: `${getVotePercentage(currentVote.votes, 'no')}%` }}
+                ></div>
+              </div>
+            )}
             <button onClick={() => handleVote('yes')}>Так</button>
             <button onClick={() => handleVote('no')}>Ні</button>
           </div>
@@ -103,16 +106,13 @@ const VotingModule = () => {
               <li key={index}>
                 <p><strong>{vote.question}</strong></p>
                 <p>Голосування завершено: Так - {vote.yesVotes}, Ні - {vote.noVotes}, Всего - {vote.totalVotes}</p>
-                <div className="vote-container">
-                  <div 
-                    className="vote-option yes"
-                    style={{ width: `${(vote.yesVotes / vote.totalVotes) * 100}%` }}
-                  ></div>
-                  <div 
-                    className="vote-option no"
-                    style={{ width: `${(vote.noVotes / vote.totalVotes) * 100}%` }}
-                  ></div>
-                </div>
+                {/* Для завершённых голосований показываем только цифровое отображение голосов */}
+                {vote.status === 'completed' && (
+                  <div>
+                    <p>Так: {vote.yesVotes}</p>
+                    <p>Ні: {vote.noVotes}</p>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
