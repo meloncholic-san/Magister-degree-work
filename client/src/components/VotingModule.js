@@ -59,6 +59,25 @@ const VotingModule = () => {
     }
   };
 
+  // Complete current vote
+  const completeCurrentVote = async (voteId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        'http://localhost:5000/api/votes/complete',
+        { voteId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchCurrentVote(); // Reload current vote
+    } catch (error) {
+      console.error('Ошибка при завершении голосования', error);
+    }
+  };
+
   // Fetch voter details for a vote
   const fetchVoterDetails = async (voteId) => {
     try {
@@ -105,6 +124,7 @@ const VotingModule = () => {
 
   return (
     <div className="voting-module">
+      {/* Current Vote Section */}
       <div>
         <h2>Поточне голосування</h2>
         {currentVote ? (
@@ -132,12 +152,20 @@ const VotingModule = () => {
             )}
             <button onClick={() => handleVote('yes')}>Так</button>
             <button onClick={() => handleVote('no')}>Ні</button>
+
+            {/* Admin Button to Complete Vote */}
+            {userRole === 'admin' && (
+              <button onClick={() => completeCurrentVote(currentVote._id)}>
+                Завершить голосование
+              </button>
+            )}
           </div>
         ) : (
           <p>Завантаження...</p>
         )}
       </div>
 
+      {/* Vote History Section */}
       <div>
         <h2>Історія голосувань</h2>
         {history.length > 0 ? (
@@ -181,6 +209,7 @@ const VotingModule = () => {
         )}
       </div>
 
+      {/* Modal for Voting Details */}
       {selectedVoteDetails && (
         <div className="modal">
           <div className="modal-content">

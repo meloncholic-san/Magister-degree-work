@@ -149,3 +149,32 @@ exports.getVoterDetails = async (req, res) => {
     res.status(500).json({ message: 'Ошибка сервера' });
   }
 };
+
+// Завершение текущего голосования
+exports.completeVote = async (req, res) => {
+  try {
+    const { voteId } = req.body; // Получаем ID голосования из тела запроса
+
+    // Ищем голосование
+    const vote = await Vote.findById(voteId);
+    if (!vote) {
+      return res.status(404).json({ error: 'Vote not found' });
+    }
+
+    // Проверяем, имеет ли пользователь роль администратора
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'You do not have permission to complete the vote' });
+    }
+
+    // Обновляем статус голосования на 'completed'
+    vote.status = 'completed';
+
+    // Сохраняем изменения
+    await vote.save();
+
+    res.status(200).json({ message: 'Vote completed successfully' });
+  } catch (error) {
+    console.error('Error completing vote:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
