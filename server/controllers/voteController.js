@@ -124,3 +124,28 @@ exports.vote = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+exports.getVoterDetails = async (req, res) => {
+  try {
+    const { voteId } = req.params;
+
+    const vote = await Vote.findById(voteId).populate('votes.userId', 'firstName lastName apartmentNumber');
+    if (!vote) {
+      return res.status(404).json({ message: 'Голосование не найдено' });
+    }
+
+    // Формируем список проголосовавших
+    const voters = vote.votes.map(vote => ({
+      firstName: vote.userId.firstName,
+      lastName: vote.userId.lastName,
+      apartmentNumber: vote.userId.apartmentNumber,
+      option: vote.option,
+    }));
+
+    res.status(200).json(voters);
+  } catch (error) {
+    console.error('Ошибка при получении данных о проголосовавших:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
+  }
+};

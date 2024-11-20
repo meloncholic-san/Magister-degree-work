@@ -7,6 +7,7 @@ const {
   getVoteHistory,
   createVote,
   vote,
+  getVoterDetails,
 } = require('../controllers/voteController');
 
 const router = express.Router();
@@ -16,5 +17,11 @@ router.get('/current', verifyToken, getCurrentVote);
 router.get('/history', verifyToken, getVoteHistory);
 router.post('/create', verifyToken, createVote);
 router.post('/vote', verifyToken, vote); // Обробник для POST-запиту
+router.get('/:voteId/voters', verifyToken, getVoterDetails);
+
 
 module.exports = router;
+
+
+
+
