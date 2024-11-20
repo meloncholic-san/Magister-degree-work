@@ -144,3 +144,72 @@ body {
     background-color: red; /* Цвет для "нет" */
   }
   
+
+
+
+
+
+  .voting-module {
+    font-family: Arial, sans-serif;
+  }
+  
+  .vote-container {
+    margin: 20px 0;
+  }
+  
+  .vote-bar {
+    display: flex;
+    height: 30px;
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .vote-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+  
+  .vote-option.yes {
+    background-color: #007bff; /* Синий для "Так" */
+  }
+  
+  .vote-option.no {
+    background-color: #dc3545; /* Красный для "Ні" */
+  }
+  
+
+  .vote-container {
+    margin-top: 10px;
+    position: relative;
+  }
+  
+  .vote-bar {
+    display: flex;
+    height: 30px;
+    border: 1px solid #ddd;
+    background-color: #f0f0f0;
+  }
+  
+  .vote-option {
+    height: 100%;
+    text-align: center;
+    color: #fff;
+    line-height: 30px;
+  }
+  
+  .vote-option.yes {
+    background-color: #007bff; /* Синий */
+  }
+  
+  .vote-option.no {
+    background-color: #dc3545; /* Красный */
+  }
+  
