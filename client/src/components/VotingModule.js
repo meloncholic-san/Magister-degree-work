@@ -1072,6 +1072,8 @@ const VotingModule = () => {
   const [userRole, setUserRole] = useState(null);
   const [newVoteQuestion, setNewVoteQuestion] = useState('');
   const [newVoteOptions, setNewVoteOptions] = useState(['']);
+  const [isCreateVoteModalOpen, setIsCreateVoteModalOpen] = useState(false);
+
 
 
   // Fetch current voting
@@ -1165,6 +1167,17 @@ const VotingModule = () => {
     }
   };
 
+  //Handle Modal Openings
+  const openCreateVoteModal = () => {
+    setIsCreateVoteModalOpen(true);
+  };
+  
+  const closeCreateVoteModal = () => {
+    setIsCreateVoteModalOpen(false);
+  };
+  
+
+
   // Handle input change for options
   const handleOptionChange = (index, event) => {
     const updatedOptions = [...newVoteOptions];
@@ -1229,78 +1242,96 @@ const VotingModule = () => {
 
   return (
     <div className="voting-module">
-      {/* Current Vote Section */}
-      <div>
-        <h2>Поточне голосування</h2>
-        {currentVote ? (
-          <div>
-            <p>{currentVote.question}</p>
-            <div className="vote-container">
-              <div className="vote-bar">
-              {currentVote.options.map((option, index) => {
-                const percentage = getVotePercentage(currentVote.votes, option);
+ {/* Current Vote Section */}
+<div>
+  <h2>Поточне голосування</h2>
+  {currentVote ? (
+    <div>
+      <p>{currentVote.question}</p>
+      <div className="vote-container">
+        <div className="vote-bar">
+          {currentVote.options.map((option, index) => {
+            const percentage = getVotePercentage(currentVote.votes, option);
 
-                
-                return (
-                  <div
-                    key={index}
-                    className={`vote-option`}
-                    style={{ backgroundColor: voteBarColors[index % voteBarColors.length], width: `${percentage}%` }}
-                  >
-                    {percentage > 0 && (
-                      <span className="vote-text">
-                        {option} - {percentage.toFixed(1)}%
-                      </span>
-                    )}
-                  </div>
-                  );
-                })}
+            return (
+              <div
+                key={index}
+                className={`vote-option`}
+                style={{ backgroundColor: voteBarColors[index % voteBarColors.length], width: `${percentage}%` }}
+              >
+                {percentage > 0 && (
+                  <span className="vote-text">
+                    {option} - {percentage.toFixed(1)}%
+                  </span>
+                )}
               </div>
-            </div>
-
-            {currentVote.options.map((option, index) => (
-              <button key={index} onClick={() => handleVote(option)}>
-                {option}
-              </button>
-            ))}
-
-            {/* Admin Button to Complete Vote */}
-            {userRole === 'admin' && (
-              <button onClick={() => completeCurrentVote(currentVote._id)}>
-                Завершити голосування
-              </button>
-            )}
-          </div>
-        ) : (
-          <p>Завантаження...</p>
-        )}
+            );
+          })}
+        </div>
       </div>
 
-      {/* New Vote Creation (Admin Only) */}
+      {currentVote.options.map((option, index) => (
+        <button key={index} onClick={() => handleVote(option)}>
+          {option}
+        </button>
+      ))}
+
+      {/* Admin Button to Complete Vote */}
       {userRole === 'admin' && (
-        <div>
-          <h2>Створити нове голосування</h2>
+        <button onClick={() => completeCurrentVote(currentVote._id)}>
+          Завершити голосування
+        </button>
+      )}
+
+    </div>
+  ) : (
+    <div>
+
+
+      <p>Наразі немає активних голосувань</p>
+      
+            {/* Admin Button to Create New Vote (opens Modal) */}
+      {userRole === 'admin' && (
+        <button className="create-vote-btn" onClick={openCreateVoteModal}>
+          +
+        </button>
+      )}
+    </div>
+  )}
+
+</div>
+
+{/* New Vote Creation Modal */}
+{userRole === 'admin' && isCreateVoteModalOpen && (
+  <div>
+    <div className="modal-backdrop" onClick={closeCreateVoteModal}></div>
+    <div className="voter-details-modal">
+      <button className="close-button" onClick={closeCreateVoteModal}>×</button>
+      <h3>Створити нове голосування</h3>
+      <input
+        type="text"
+        placeholder="Введіть питання голосування"
+        value={newVoteQuestion}
+        onChange={(e) => setNewVoteQuestion(e.target.value)}
+      />
+      {newVoteOptions.map((option, index) => (
+        <div key={index}>
           <input
             type="text"
-            placeholder="Введіть питання голосування"
-            value={newVoteQuestion}
-            onChange={(e) => setNewVoteQuestion(e.target.value)}
+            placeholder={`Опція ${index + 1}`}
+            value={option}
+            onChange={(e) => handleOptionChange(index, e)}
           />
-          {newVoteOptions.map((option, index) => (
-            <div key={index}>
-              <input
-                type="text"
-                placeholder={`Опція ${index + 1}`}
-                value={option}
-                onChange={(e) => handleOptionChange(index, e)}
-              />
-              <button onClick={() => handleRemoveOption(index)}>Видалити</button>
-            </div>
-          ))}
-          <button onClick={handleAddOption}>Додати опцію</button>
-          <button onClick={handleCreateVote}>Створити голосування</button>
+          <button onClick={() => handleRemoveOption(index)}>Видалити</button>
         </div>
-      )}
+      ))}
+      <button onClick={handleAddOption}>Додати опцію</button>
+      <button onClick={handleCreateVote}>Створити голосування</button>
+    </div>
+  </div>
+)}
+
+
 
       {/* Vote History Section */}
       <div>
