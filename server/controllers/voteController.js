@@ -67,13 +67,28 @@ exports.getVoteHistory = async (req, res) => {
 // Создание нового голосования
 exports.createVote = async (req, res) => {
   const { question, options } = req.body;
+
+  // Проверка, что активных голосований нет
+  const activeVote = await Vote.findOne({ status: 'active' });
+  if (activeVote) {
+    return res.status(400).json({ message: 'Есть активное голосование. Необходимо завершить его, прежде чем начать новое.' });
+  }
+
+  // Если не активное голосование, то создаем новое
   try {
+    // Перевірка, чи є хоча б одна опція
+    if (!options || options.length < 2) {
+      return res.status(400).json({ message: 'Для голосування потрібно мінімум дві опції.' });
+    }
+
+    // Створюємо нове голосування
     const newVote = new Vote({
       question,
       options,
-      status: 'active',
+      status: 'active',  // Статус активне
       createdBy: req.user.id,
     });
+
     await newVote.save();
     res.status(201).json(newVote);
   } catch (error) {

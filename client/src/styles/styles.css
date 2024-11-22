@@ -249,3 +249,111 @@ body {
     cursor: pointer;
   }
   
+
+  
+  .history-item {
+    list-style: none;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .history-vote-bar {
+    display: flex;
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  
+  .history-vote-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .history-vote-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  
+/* Загальний стиль для модалки */
+.voter-details-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%; /* Ширина 90% екрану */
+  max-width: 500px; /* Максимальна ширина */
+  background-color: #ffffff; /* Білий фон */
+  border-radius: 10px; /* Закруглені кути */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* Тінь для об’ємності */
+  z-index: 1000; /* Високий пріоритет */
+  padding: 20px; /* Внутрішні відступи */
+  overflow: auto; /* Скрол у випадку довгого контенту */
+}
+
+/* Кнопка хрестик */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+/* Стиль заголовка */
+.voter-details-modal h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #333; /* Темний текст */
+  text-align: center;
+}
+
+/* Список */
+.voter-details-modal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.voter-details-modal li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555; /* Сірий текст */
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.voter-details-modal li:last-child {
+  border-bottom: none;
+}
+
+/* Стиль для затемнення фону */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Прозорий чорний фон */
+  z-index: 999; /* Позаду модалки */
+}
