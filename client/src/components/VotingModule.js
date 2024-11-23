@@ -31,6 +31,16 @@ const VotingModule = () => {
   const [isCreateVoteModalOpen, setIsCreateVoteModalOpen] = useState(false);
   const [durationHours, setDurationHours] = useState(null); 
 
+  const [remainingTime, setRemainingTime] = useState(null);
+
+   // Функція для обчислення часу до завершення
+   const calculateRemainingTime = (expiresAt) => {
+    const now = Date.now();
+    const expirationTime = new Date(expiresAt).getTime();
+    const timeDiff = expirationTime - now; // Різниця в мілісекундах
+
+    return timeDiff > 0 ? Math.ceil(timeDiff / 1000) : 0; // Повертає секунди або 0
+  };
 
   // Fetch current voting
   const fetchCurrentVote = async () => {
@@ -42,9 +52,19 @@ const VotingModule = () => {
         },
       });
       setCurrentVote(response.data);
+
+            // Початкове обчислення залишкового часу
+            if (response.data?.expiresAt) {
+              const timeLeft = calculateRemainingTime(response.data.expiresAt);
+              setRemainingTime(timeLeft);
+            }
+
     } catch (error) {
       console.error('Ошибка при получении текущего голосования', error);
     }
+
+
+
   };
 
   // Fetch vote history
@@ -197,6 +217,28 @@ const VotingModule = () => {
     fetchVoteHistory();
   }, []);
 
+
+    // Використання таймера для оновлення залишкового часу
+    useEffect(() => {
+      let timer;
+  
+      if (currentVote?.expiresAt) {
+        // Запуск інтервалу
+        timer = setInterval(() => {
+          const timeLeft = calculateRemainingTime(currentVote.expiresAt);
+          setRemainingTime(timeLeft);
+  
+          if (timeLeft <= 0) {
+            clearInterval(timer); // Зупинка таймера, якщо час вийшов
+          }
+        }, 1000); // Оновлення кожну секунду
+      }
+  
+      // Очищення інтервалу при демонтажі компонента
+      return () => clearInterval(timer);
+    }, [currentVote]);
+  
+  
   return (
     <div className="voting-module">
  {/* Current Vote Section */}
@@ -205,11 +247,11 @@ const VotingModule = () => {
   {currentVote ? (
     
     <div>
-            {currentVote?.expiresAt && (
-        <div className="timer">
-          Голосування закінчиться через: {Math.max(0, Math.ceil((new Date(currentVote.expiresAt) - Date.now()) / 1000 / 60))} хвилин
-        </div>
-      )}
+             {remainingTime !== null && (
+            <div className="timer">
+              Залишилося часу: {Math.floor(remainingTime / 60)} хв {remainingTime % 60} сек
+            </div>
+          )}
       <p>{currentVote.question}</p>
       <div className="vote-container">
         <div className="vote-bar">
