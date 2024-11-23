@@ -23,6 +23,7 @@ const voteSchema = new mongoose.Schema({
       default: 'active',
   },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  expiresAt: { type: Date }, // Поле для времени окончания
 }, { timestamps: true });
 
 const Vote = mongoose.model('Vote', voteSchema);

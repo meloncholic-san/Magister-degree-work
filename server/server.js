@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const connectDB = require('./db'); // Імпортуємо функцію для підключення до бази
 const userRoutes = require('./routes/userRoutes');
+const { scheduleVoteCompletion } = require('./middleware/scheduler.js');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -36,6 +37,10 @@ app.use('/api/messages', chatRoutes);
 // Подключаем маршруты голосования
 const voteRoutes = require('./routes/Votes.js');
 app.use('/api/votes', voteRoutes);
+
+
+// Запускаем планировщик
+scheduleVoteCompletion();
 
 
 // Запуск сервера

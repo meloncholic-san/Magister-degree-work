@@ -65,8 +65,9 @@ exports.getVoteHistory = async (req, res) => {
 };
 
 // Создание нового голосования
+
 exports.createVote = async (req, res) => {
-  const { question, options } = req.body;
+  const { question, options, durationHours  } = req.body;
 
   // Проверка, что активных голосований нет
   const activeVote = await Vote.findOne({ status: 'active' });
@@ -81,12 +82,16 @@ exports.createVote = async (req, res) => {
       return res.status(400).json({ message: 'Для голосування потрібно мінімум дві опції.' });
     }
 
+    // Рассчитать время окончания, если задано
+    const expiresAt = durationHours ? new Date(Date.now() + durationHours * 60 * 60 * 1000) : null;
+
     // Створюємо нове голосування
     const newVote = new Vote({
       question,
       options,
       status: 'active',  // Статус активне
       createdBy: req.user.id,
+      expiresAt, // Добавляем время окончания, если задано
     });
 
     await newVote.save();
@@ -95,6 +100,7 @@ exports.createVote = async (req, res) => {
     res.status(500).json({ message: 'Ошибка при создании голосования' });
   }
 };
+
 
 exports.vote = async (req, res) => {
   try {
