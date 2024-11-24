@@ -4,7 +4,8 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const voteBarColors = [
   '#1E90FF', // DodgerBlue
@@ -114,9 +115,16 @@ const VotingModule = () => {
           },
         }
       );
+      // Оновлюємо локальний стан
+      setCurrentVote(null);
+      // Оновлюємо історію голосувань
+      fetchVoteHistory();
+
+      toast.success('Голосування успішно завершено!'); // Успішне сповіщення
       fetchCurrentVote(); // Reload current vote
     } catch (error) {
       console.error('Ошибка при завершении голосования', error);
+      toast.error('Сталася помилка при завершенні голосування.'); // Помилка
     }
   };
 
@@ -195,6 +203,28 @@ const VotingModule = () => {
     setVoters([]);
   };
 
+      // Використання таймера для оновлення залишкового часу
+      useEffect(() => {
+        let timer;
+    
+        if (currentVote?.expiresAt) {
+          // Запуск інтервалу
+          timer = setInterval(() => {
+            const timeLeft = calculateRemainingTime(currentVote.expiresAt);
+            setRemainingTime(timeLeft);
+    
+            if (timeLeft <= 0) {
+              clearInterval(timer); // Зупинка таймера, якщо час вийшов
+            }
+          }, 1000); // Оновлення кожну секунду
+        }
+    
+        // Очищення інтервалу при демонтажі компонента
+        return () => clearInterval(timer);
+      }, [currentVote]);
+    
+
+
   // Get vote percentage for each option
   const getVotePercentage = (votes, option) => {
     const totalVotes = votes.length;
@@ -218,26 +248,7 @@ const VotingModule = () => {
   }, []);
 
 
-    // Використання таймера для оновлення залишкового часу
-    useEffect(() => {
-      let timer;
-  
-      if (currentVote?.expiresAt) {
-        // Запуск інтервалу
-        timer = setInterval(() => {
-          const timeLeft = calculateRemainingTime(currentVote.expiresAt);
-          setRemainingTime(timeLeft);
-  
-          if (timeLeft <= 0) {
-            clearInterval(timer); // Зупинка таймера, якщо час вийшов
-          }
-        }, 1000); // Оновлення кожну секунду
-      }
-  
-      // Очищення інтервалу при демонтажі компонента
-      return () => clearInterval(timer);
-    }, [currentVote]);
-  
+
   
   return (
     <div className="voting-module">
@@ -245,14 +256,24 @@ const VotingModule = () => {
 <div>
   <h2>Поточне голосування</h2>
   {currentVote ? (
-    
     <div>
-             {remainingTime !== null && (
-            <div className="timer">
-              Залишилося часу: {Math.floor(remainingTime / 60)} хв {remainingTime % 60} сек
-            </div>
-          )}
-      <p>{currentVote.question}</p>
+           {remainingTime !== null && (
+  <div className="timer">
+    Залишилося часу: {" "}  
+    {Math.floor(remainingTime / 86400) > 0 && (
+      <>
+        {Math.floor(remainingTime / 86400)} дн{"  "}
+      </>
+    )}
+    {Math.floor((remainingTime % 86400) / 3600) > 0 && (
+      <>
+        {Math.floor((remainingTime % 86400) / 3600)} год{" "}
+      </>
+    )}
+    {Math.floor((remainingTime % 3600) / 60)} хв {remainingTime % 60} сек
+  </div>
+)}
+      <p className="vote-question" >{currentVote.question}</p>
       <div className="vote-container">
         <div className="vote-bar">
           
@@ -275,16 +296,26 @@ const VotingModule = () => {
           })}
         </div>
       </div>
-
-      {currentVote.options.map((option, index) => (
-        <button key={index} onClick={() => handleVote(option)}>
+      <div className="button-grid">
+        {currentVote.options.map((option, index) => (
+        <button
+          className="button-option"
+          key={index}
+          style={{
+            backgroundColor: voteBarColors[index % voteBarColors.length], // Призначаємо колір із масиву
+          }}
+          onClick={() => handleVote(option)}
+        >
           {option}
         </button>
       ))}
+      </div>
 
       {/* Admin Button to Complete Vote */}
       {userRole === 'admin' && (
-        <button onClick={() => completeCurrentVote(currentVote._id)}>
+        <button 
+        className="admin-button"
+        onClick={() => completeCurrentVote(currentVote._id)}>
           Завершити голосування
         </button>
       )}
@@ -292,9 +323,7 @@ const VotingModule = () => {
     </div>
   ) : (
     <div>
-
-
-      <p>Наразі немає активних голосувань</p>
+      <p className="empty-vote-phrase" >Наразі немає активних голосувань</p>
       
             {/* Admin Button to Create New Vote (opens Modal) */}
       {userRole === 'admin' && (
@@ -313,47 +342,57 @@ const VotingModule = () => {
     <div className="modal-backdrop" onClick={closeCreateVoteModal}></div>
     <div className="voter-details-modal">
       <button className="close-button" onClick={closeCreateVoteModal}>×</button>
-      <h3>Створити нове голосування</h3>
+      <h3 className="new-vote-header" >Створити нове голосування</h3>
       <input
+        className="new-vote-name"
         type="text"
         placeholder="Введіть питання голосування"
         value={newVoteQuestion}
         onChange={(e) => setNewVoteQuestion(e.target.value)}
       />
       {newVoteOptions.map((option, index) => (
-        <div key={index}>
+        <div className="new-vote-option-container" key={index}>
           <input
+            className="new-vote-option"
             type="text"
             placeholder={`Опція ${index + 1}`}
             value={option}
             onChange={(e) => handleOptionChange(index, e)}
           />
-          <button onClick={() => handleRemoveOption(index)}>Видалити</button>
+          <button 
+           className="new-vote-option-delete"
+           onClick={() => handleRemoveOption(index)}>Видалити</button>
         </div>
       ))}
-      <button onClick={handleAddOption}>Додати опцію</button>
+      <button
+      className="new-vote-option-create"
+       onClick={handleAddOption}>Додати опцію</button>
 
 {/* Поле для задания таймера */}
 <div>
-    <label>
+    <label className="new-vote-timer-header">
       Ви хочете створити таймер для голосування?
-      <input
+      <input className="new-vote-timer-chechbox"
         type="checkbox"
         checked={!!durationHours}
         onChange={(e) => setDurationHours(e.target.checked ? 1 : null)} // Таймер на 1 час по умолчанию
       />
     </label>
     {durationHours && (
+      <div className="new-vote-timer-container">
+      <span className="new-vote-timer-label">Введіть кількість годин</span>
       <input
+        className="new-vote-timer-duration"
         type="number"
         placeholder="Вкажіть години"
         value={durationHours}
         onChange={(e) => setDurationHours(Number(e.target.value))}
       />
+    </div>
     )}
   </div>
 
-      <button onClick={handleCreateVote}>Створити голосування</button>
+      <button className="new-vote-button-create" onClick={handleCreateVote}>Створити голосування</button>
     </div>
   </div>
 )}
@@ -364,35 +403,40 @@ const VotingModule = () => {
       <div>
         <h2>Історія голосувань</h2>
         {history.length > 0 ? (
-          <ul>
-            {history.map((vote, index) => (
-              <li key={index} className="history-item">
-                <p><strong>{vote.question}</strong></p>
-                <p>Голосування завершено</p>
-                <div className="history-vote-bar">
-                  {vote.options.map((option, idx) => {
-                    return (
-                      <div
-                        key={idx}
-                        className="history-vote-option"
-                        style={{
-                          backgroundColor: voteBarColors[idx % voteBarColors.length],
-                          width: `${getVotePercentage(vote.votes, option)}%`,
-                        }}
-                      >
-                        {getVotePercentage(vote.votes, option) > 0 && (
-                          <span className="history-vote-text">
-                            {option} - {getVotePercentage(vote.votes, option).toFixed(1)}%
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-                <button onClick={() => fetchVoterDetails(vote._id)}>Переглянути деталі голосування</button>
-              </li>
-            ))}
-          </ul>
+           <div className="history-container">
+            <ul>
+              {history
+              .slice()
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Сортуємо за датою завершення
+              .map((vote, index) => (
+                <li key={index} className="history-item">
+                  <p><strong>{vote.question}</strong></p>
+                  <p>Голосування завершено</p>
+                  <div className="history-vote-bar">
+                    {vote.options.map((option, idx) => {
+                      return (
+                        <div
+                          key={idx}
+                          className="history-vote-option"
+                          style={{
+                            backgroundColor: voteBarColors[idx % voteBarColors.length],
+                            width: `${getVotePercentage(vote.votes, option)}%`,
+                          }}
+                        >
+                          {getVotePercentage(vote.votes, option) > 0 && (
+                            <span className="history-vote-text">
+                              {option} - {getVotePercentage(vote.votes, option).toFixed(1)}%
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button onClick={() => fetchVoterDetails(vote._id)}>Переглянути деталі голосування</button>
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : (
           <p>Історія порожня.</p>
         )}
@@ -420,9 +464,10 @@ const VotingModule = () => {
           </div>
         )}
 
-
+    <ToastContainer />
     </div>
   );
+
 };
 
 export default VotingModule;
