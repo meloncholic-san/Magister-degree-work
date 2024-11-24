@@ -99,6 +99,15 @@ const VotingModule = () => {
       fetchCurrentVote();
     } catch (error) {
       console.error('Ошибка при отправке голоса', error);
+      if (error.response && error.response.status === 409) {
+        // Якщо помилка 409 (конфлікт - голос вже подано)
+        toast.error('Ви вже проголосували!', {
+          autoClose: 3000, // Сповіщення буде закриватися через 5 секунд
+        });
+      } else {
+        // Загальне сповіщення про помилку
+        toast.error('Сталася помилка при відправці голосу. Спробуйте ще раз.');
+      }
     }
   };
 
@@ -126,6 +135,7 @@ const VotingModule = () => {
       console.error('Ошибка при завершении голосования', error);
       toast.error('Сталася помилка при завершенні голосування.'); // Помилка
     }
+    
   };
 
   // Create new vote
