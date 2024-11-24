@@ -510,6 +510,11 @@ body {
     border-radius: 10px;
     background: #f8f9fa;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+      /* Стилі для скролу */
+  scrollbar-width: thin; /* Тонкий скролбар */
+  scrollbar-color: #007bff #f0f0f0; /* Колір скролу (ручка та фон) */
+  
   }
   
 .history-item {
@@ -521,6 +526,8 @@ body {
     background: linear-gradient(to right, #fdfdfd, #f7f7f7);
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    
 }
 
 .history-item:hover {
@@ -559,8 +566,32 @@ body {
     white-space: nowrap;
     font-size: 12px;
   }
+  
+  /* Стилі для кнопки "Переглянути деталі голосування" */
+  .vote-history-details-button {
+    padding: 5px 5px; /* Відступи всередині кнопки */
+    background-color: #007bff; /* Основний колір фону */
+    color: white; /* Колір тексту */
+    font-size: 14px; /* Розмір шрифту */
+    font-weight: bold; /* Жирний шрифт */
+    border: none; /* Без бордера */
+    border-radius: 5px; /* Округлені кути */
+    cursor: pointer; /* Курсор при наведенні на кнопку */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Плавні ефекти */
+    margin-top: 10px; /* Відступ зверху */
+  }
 
+  /* Стиль кнопки при наведенні */
+  .vote-history-details-button:hover {
+    background-color: #0056b3; /* Темніший колір фону при наведенні */
+    transform: translateY(-3px); /* Легкий підйом кнопки */
+  }
 
+  /* Стиль кнопки при фокусі (коли кнопка активна або вибрана) */
+  .vote-history-details-button:focus {
+    outline: none; /* Прибираємо стандартний контур при фокусі */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* Тінь навколо кнопки */
+  }
   
 /* Загальний стиль для модалки */
 .voter-details-modal {

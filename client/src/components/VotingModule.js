@@ -398,7 +398,6 @@ const VotingModule = () => {
 )}
 
 
-
       {/* Vote History Section */}
       <div>
         <h2>Історія голосувань</h2>
@@ -410,8 +409,7 @@ const VotingModule = () => {
                 .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Сортуємо за датою завершення
               .map((vote, index) => (
                 <li key={index} className="history-item">
-                  <p><strong>{vote.question}</strong></p>
-                  <p>Голосування завершено</p>
+                  <p className="vote-question">{vote.question}</p>
                   <div className="history-vote-bar">
                     {vote.options.map((option, idx) => {
                       return (
@@ -432,7 +430,7 @@ const VotingModule = () => {
                       );
                     })}
                   </div>
-                  <button onClick={() => fetchVoterDetails(vote._id)}>Переглянути деталі голосування</button>
+                  <button className= "vote-history-details-button" onClick={() => fetchVoterDetails(vote._id)}>Переглянути деталі голосування</button>
                 </li>
               ))}
             </ul>
