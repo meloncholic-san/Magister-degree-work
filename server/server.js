@@ -41,6 +41,10 @@ app.use('/api/votes', voteRoutes);
 const paymentRoutes = require('./routes/paymentRoutes'); // Import the payment routes
 app.use('/api/payments', paymentRoutes); // Register payment routes
 
+const osbbStatisticsRoutes = require('./routes/osbbStatisticsRoutes'); // Імпортуємо маршрут
+app.use('/api/statistics', osbbStatisticsRoutes); // Реєструємо маршрут для статистики
+
+
 // Запускаем планировщик
 scheduleVoteCompletion();
 

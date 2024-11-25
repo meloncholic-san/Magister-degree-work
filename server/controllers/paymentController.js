@@ -3,6 +3,8 @@
 const crypto = require('crypto');
 const axios = require('axios');
 const UserPayment = require('../models/UserPayment');
+const OsbbStatistics = require('../models/OsbbStatistics'); // Підключаємо модель статистики
+
 
 // Публічні та приватні ключі LiqPay
 const PUBLIC_KEY = process.env.LIQPAY_PUBLIC_KEY;
@@ -57,10 +59,10 @@ const apiRequest = async (path, data) => {
 exports.createPayment = async (req, res) => {
   console.log('Received request to create payment');
   
-  const { userId, amount, description } = req.body;
+  const { userId, amount, description, purpose  } = req.body;
 
-  if (!userId || !amount || !description) {
-    console.log('Missing required fields:', { userId, amount, description });
+  if (!userId || !amount || !description || !purpose) {
+    console.log('Missing required fields:', { userId, amount, description, purpose });
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -85,7 +87,6 @@ exports.createPayment = async (req, res) => {
   try {
     // Зберігаємо платіж у базу даних
     console.log('Saving payment information to the database');
-    
     const newPayment = new UserPayment({
       userId,
       orderId,
@@ -96,6 +97,32 @@ exports.createPayment = async (req, res) => {
 
     await newPayment.save();
     console.log(`Payment successfully saved for orderId: ${orderId}`);
+
+
+    // Оновлюємо статистику ОСББ
+    console.log(`Updating OSBB statistics for purpose: ${purpose}`);
+    const osbbStat = await OsbbStatistics.findOne({ purpose });
+
+    if (!osbbStat) {
+        // Якщо запису про збір із таким призначенням немає, створюємо новий
+        const newStat = new OsbbStatistics({
+          purpose,
+          totalAmount: 0, // Можна передати із запиту, якщо потрібно
+          collectedAmount: amount,
+          payments: [{ userId, amount }],
+        });
+        await newStat.save();
+        console.log(`Created new OSBB statistic for purpose: ${purpose}`);
+      } else {
+        // Якщо запис уже існує, оновлюємо його
+        osbbStat.collectedAmount += amount;
+        osbbStat.debt = osbbStat.totalAmount - osbbStat.collectedAmount; // Оновлюємо борг
+        osbbStat.payments.push({ userId, amount });
+        await osbbStat.save();
+        console.log(`Updated OSBB statistic for purpose: ${purpose}`);
+      }
+
+
 
     res.json({
       data,
