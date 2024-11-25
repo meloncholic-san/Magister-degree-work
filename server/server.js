@@ -38,6 +38,8 @@ app.use('/api/messages', chatRoutes);
 const voteRoutes = require('./routes/Votes.js');
 app.use('/api/votes', voteRoutes);
 
+const paymentRoutes = require('./routes/paymentRoutes'); // Import the payment routes
+app.use('/api/payments', paymentRoutes); // Register payment routes
 
 // Запускаем планировщик
 scheduleVoteCompletion();
@@ -47,7 +49,3 @@ scheduleVoteCompletion();
 app.listen(PORT, () => {
     console.log(`Сервер запущено на порту ${PORT}`);
 });
-
-
-
-
