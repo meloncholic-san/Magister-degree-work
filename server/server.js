@@ -45,6 +45,12 @@ const osbbStatisticsRoutes = require('./routes/osbbStatisticsRoutes'); // Імп
 app.use('/api/statistics', osbbStatisticsRoutes); // Реєструємо маршрут для статистики
 
 
+const financeRoutes = require('./routes/financeRoute.js');
+
+// Інші маршрути...
+app.use('/api/finance', financeRoutes);
+
+
 // Запускаем планировщик
 scheduleVoteCompletion();
 

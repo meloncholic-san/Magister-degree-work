@@ -34,7 +34,7 @@ const createPaymentData = (paymentData) => {
 // Запит до API LiqPay
 const apiRequest = async (path, data) => {
   try {
-    console.log('Making API request to LiqPay:', `https://www.liqpay.ua/api/${path}`);
+    console.log('Making API request to LiqPay:', `https://www.liqpay.ua/api/request`);
     
     const signature = generateSignature(data);
     const formData = new URLSearchParams();
@@ -44,7 +44,7 @@ const apiRequest = async (path, data) => {
     console.log('Request data:', data);
     console.log('Generated signature:', signature);
 
-    const response = await axios.post(`https://www.liqpay.ua/api/${path}`, formData, {
+    const response = await axios.post(`https://www.liqpay.ua/api/request`, formData, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
 
@@ -117,7 +117,7 @@ exports.createPayment = async (req, res) => {
       } else {
         // Якщо запис уже існує, оновлюємо його
         osbbStat.collectedAmount += amount;
-        osbbStat.debt = osbbStat.totalAmount - osbbStat.collectedAmount; // Оновлюємо борг
+        osbbStat.debt = Math.max(0, osbbStat.totalAmount - osbbStat.collectedAmount); // Не допускаємо від'ємного боргу
         osbbStat.payments.push({ userId, amount });
         await osbbStat.save();
         console.log(`Updated OSBB statistic for purpose: ${purpose}`);
