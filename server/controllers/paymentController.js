@@ -60,7 +60,11 @@ const apiRequest = async (path, data) => {
 exports.createPayment = async (req, res) => {
   console.log('Received request to create payment');
   
-  const { userId, amount, description, purpose  } = req.body;
+    const userId = req.user.userId; // userId із токена, доданого через middleware
+
+    console.log(`Створення платежу для користувача: ${userId}`);
+
+  const { amount, description, purpose  } = req.body;
 
   if (!userId || !amount || !description || !purpose) {
     console.log('Missing required fields:', { userId, amount, description, purpose });

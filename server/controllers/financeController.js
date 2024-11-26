@@ -3,8 +3,6 @@ const OsbbStatistics = require('../models/OsbbStatistics');
 const User = require('../models/User');
 const { getApartmentArea } = require('../utils/apartmentUtils');
 
-console.log(getApartmentArea);
-
 // Отримати список активних зборів та внески користувачів
 exports.getActiveCollections = async (req, res) => {
   try {
