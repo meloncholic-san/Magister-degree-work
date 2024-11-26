@@ -18,6 +18,7 @@ const generateSignature = (data) => {
   return signature;
 };
 
+
 // Формування даних для платіжної форми
 const createPaymentData = (paymentData) => {
   console.log('Preparing payment data:', paymentData);
@@ -68,10 +69,10 @@ exports.createPayment = async (req, res) => {
 
   const orderId = `osbb_${Date.now()}_${userId}`;
   console.log('Generated unique order ID:', orderId);
-
+  console.log("HERE IS USER ID:", userId);
   const paymentData = {
     public_key: PUBLIC_KEY,
-    version: '3',
+    version: 3,
     action: 'pay',
     amount,
     currency: 'UAH',
@@ -161,7 +162,7 @@ exports.getPaymentStatus = async (req, res) => {
     // Отримуємо статус платіжного запиту
     console.log('Making API request to check payment status');
     
-    const status = await apiRequest('status', encodedData);
+    const status = await apiRequest('status', encodedData);//////////////////////////////////'request'
 
     console.log(`Received payment status for orderId ${orderId}:`, status);
 

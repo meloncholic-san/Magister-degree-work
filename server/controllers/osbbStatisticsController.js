@@ -1,3 +1,4 @@
+//server/controllers/osbbStatisticsController.js
 const OsbbStatistics = require('../models/OsbbStatistics');
 
 // Отримати список усіх зборів

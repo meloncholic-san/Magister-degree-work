@@ -3,9 +3,9 @@ const router = express.Router();
 const osbbStatisticsController = require('../controllers/osbbStatisticsController');
 
 // Маршрути
-router.get('/', osbbStatisticsController.getAllStatistics); // Видалено /statistics
-router.post('/', osbbStatisticsController.createStatistic); // Видалено /statistics
-router.delete('/:id', osbbStatisticsController.deleteStatistic); // Видалено /statistics
+router.get('/', osbbStatisticsController.getAllStatistics); 
+router.post('/', osbbStatisticsController.createStatistic); 
+router.delete('/:id', osbbStatisticsController.deleteStatistic); 
 
 
 
