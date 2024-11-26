@@ -108,20 +108,35 @@ exports.createPayment = async (req, res) => {
     console.log(`Updating OSBB statistics for purpose: ${purpose}`);
     const osbbStat = await OsbbStatistics.findOne({ purpose });
 
-    if (!osbbStat) {
-        // Якщо запису про збір із таким призначенням немає, створюємо новий
-        const newStat = new OsbbStatistics({
-          purpose,
-          totalAmount: 0, // Можна передати із запиту, якщо потрібно
-          collectedAmount: amount,
-          payments: [{ userId, amount }],
+    if (osbbStat) 
+      // {
+      //   // Якщо запису про збір із таким призначенням немає, створюємо новий
+      //   const newStat = new OsbbStatistics({
+      //     purpose,
+      //     totalAmount: 0, // Можна передати із запиту, якщо потрібно
+      //     collectedAmount: amount,
+      //     payments: [{ userId, amount }],
+      //   });
+      //   await newStat.save();
+      //   console.log(`Created new OSBB statistic for purpose: ${purpose}`);
+      // } 
+      {
+      // Перевірка, чи вже існує платіж від цього користувача
+      const userAlreadyPaid = osbbStat.payments.some(payment => String(payment.userId) === String(userId));
+
+      if (userAlreadyPaid) {
+        console.log(`User with ID ${userId} has already paid for purpose: ${purpose}`);
+        // Повертаємо статус 403, якщо користувач вже платив
+        return res.status(403).json({
+          message: `User has already paid for purpose: ${purpose}`
         });
-        await newStat.save();
-        console.log(`Created new OSBB statistic for purpose: ${purpose}`);
-      } else {
-        // Якщо запис уже існує, оновлюємо його
-        osbbStat.collectedAmount += amount;
-        osbbStat.debt = Math.max(0, osbbStat.totalAmount - osbbStat.collectedAmount); // Не допускаємо від'ємного боргу
+      }
+
+
+        // Оновлення існуючої статистики
+        osbbStat.collectedAmount = parseFloat(osbbStat.collectedAmount) + parseFloat(amount) || 0; // переконуємося, що це числа
+        osbbStat.debt = Math.max(0, osbbStat.totalAmount - osbbStat.collectedAmount); // перерахунок боргу
+
         osbbStat.payments.push({ userId, amount });
         await osbbStat.save();
         console.log(`Updated OSBB statistic for purpose: ${purpose}`);
@@ -166,7 +181,7 @@ exports.getPaymentStatus = async (req, res) => {
     // Отримуємо статус платіжного запиту
     console.log('Making API request to check payment status');
     
-    const status = await apiRequest('status', encodedData);//////////////////////////////////'request'
+    const status = await apiRequest('status', encodedData);
 
     console.log(`Received payment status for orderId ${orderId}:`, status);
 
