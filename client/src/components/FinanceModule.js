@@ -1,343 +1,5 @@
 
 // client/src/components/FinanceModule.js
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// const token = localStorage.getItem('token');
-// console.log(localStorage.getItem('token'));
-// const FinanceModule = () => {
-//   const [collections, setCollections] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   // Отримати активні збори при завантаженні компонента
-//   useEffect(() => {
-//     const fetchCollections = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:5000/api/finance/active-collections', {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//         });
-
-//         setCollections(response.data);
-//         setLoading(false);
-//       } catch (err) {
-//         console.error('Error fetching collections:', err);
-//         setError('Не вдалося завантажити дані зборів.');
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchCollections();
-//   }, []);
-
-//   const handlePayment = async (collectionPurpose, amount, userId) => {
-//     console.log("Параметры для платежа:");
-//     console.log("Ціль збору (collectionPurpose):", collectionPurpose);
-//     console.log("Сума (amount):", amount);
-
-//     try {
-
-//         const response = await axios.post('http://localhost:5000/api/payments/create', 
-//             {
-//               amount,
-//               description: `Оплата за ${collectionPurpose}`,
-//               purpose: collectionPurpose,
-//             }, 
-//             {
-//               headers: {
-//                 Authorization: `Bearer ${token}`,
-//               },
-//             }
-//           );
-
-//       console.log("Payment created:", response.data);
-//       // Переходимо на сторінку LiqPay для оплати
-//       const { data, signature, url } = response.data;
-//       const form = document.createElement('form');
-//       form.action = url;
-//       form.method = 'POST';
-//       form.innerHTML = `
-//         <input type="hidden" name="data" value="${data}" />
-//         <input type="hidden" name="signature" value="${signature}" />
-//       `;
-//       document.body.appendChild(form);
-//       form.submit();
-//       document.body.removeChild(form);
-//     } catch (err) {
-//       console.error('Error initiating payment:', err);
-//       alert('Помилка створення платежу. Спробуйте ще раз.');
-//     }
-//   };
-
-//   if (loading) return <p>Завантаження даних...</p>;
-//   if (error) return <p>{error}</p>;
-
-//   return (
-//     <div className="finance-module">
-//       <h2>Фінансовий модуль</h2>
-//       {collections.length === 0 ? (
-//         <p>Наразі немає активних зборів.</p>
-//       ) : (
-//         collections.map((collection, index) => (
-//           <div key={index} className="collection">
-//             <h3>{collection.purpose}</h3>
-//             <p>Загальна сума: {collection.totalAmount} грн</p>
-//             <p>Зібрано: {collection.collectedAmount} грн</p>
-//             <p>Борг: {collection.debt} грн</p>
-//             <h4>Деталі внесків:</h4>
-//             <table>
-//               <thead>
-//                 <tr>
-//                   <th>Користувач</th>
-//                   <th>Квартира</th>
-//                   <th>Площа</th>
-//                   <th>Внесок</th>
-//                   <th>Сплачено</th>
-//                   <th>Залишок</th>
-//                   <th>Дія</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {collection.contributions.map((contribution, i) => (
-//                   <tr key={i}>
-//                     <td>{contribution.name}</td>
-//                     <td>{contribution.apartmentNumber}</td>
-//                     <td>{contribution.area} м²</td>
-//                     <td>{contribution.requiredContribution} грн</td>
-//                     <td>{contribution.paid} грн</td>
-//                     <td>{contribution.remaining} грн</td>
-//                     <td>
-//                       {contribution.remaining > 0 && (
-//                         <button
-//                           onClick={() =>
-//                             handlePayment(collection.purpose, contribution.remaining, contribution.userId)
-//                           }
-//                         >
-//                           Оплатити
-//                         </button>
-//                       )}
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-//         ))
-//       )}
-//     </div>
-//   );
-// };
-
-// export default FinanceModule;
-
-
-// // client/src/components/FinanceModule.js
-
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-
-// const FinanceModule = () => {
-//   const [collections, setCollections] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const [userRole, setUserRole] = useState(null);
-
-//   const token = localStorage.getItem('token');
-
-//   useEffect(() => {
-//     const fetchCollections = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:5000/api/finance/active-collections', {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//         });
-
-//         // Витягуємо роль із відповіді сервера (якщо доступна)
-//         const role = response.data.role || 'user';
-//         setUserRole(role);
-
-//         setCollections(response.data.collections || response.data);
-//         setLoading(false);
-//       } catch (err) {
-//         console.error('Error fetching collections:', err);
-//         setError('Не вдалося завантажити дані зборів.');
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchCollections();
-//   }, [token]);
-
-//   const handlePayment = async (collectionPurpose, amount) => {
-//     try {
-//       const response = await axios.post(
-//         'http://localhost:5000/api/payments/create',
-//         {
-//           amount,
-//           description: `Оплата за ${collectionPurpose}`,
-//           purpose: collectionPurpose,
-//         },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-
-//       const { data, signature, url } = response.data;
-//       const form = document.createElement('form');
-//       form.action = url;
-//       form.method = 'POST';
-//       form.innerHTML = `
-//         <input type="hidden" name="data" value="${data}" />
-//         <input type="hidden" name="signature" value="${signature}" />
-//       `;
-//       document.body.appendChild(form);
-//       form.submit();
-//       document.body.removeChild(form);
-//     } catch (err) {
-//       console.error('Error initiating payment:', err);
-//       alert('Помилка створення платежу. Спробуйте ще раз.');
-//     }
-//   };
-
-//   if (loading) return <p>Завантаження даних...</p>;
-//   if (error) return <p>{error}</p>;
-
-//   return (
-//     <div className="finance-module">
-//       <h2>Фінансовий модуль</h2>
-//       {collections.length === 0 ? (
-//         <p>Наразі немає активних зборів.</p>
-//       ) : userRole === 'admin' ? (
-//         collections.map((collection, index) => (
-//           <div key={index} className="collection">
-//             <h3>{collection.purpose}</h3>
-//             <p>Загальна сума: {collection.totalAmount} грн</p>
-//             <p>Зібрано: {collection.collectedAmount} грн</p>
-//             <p>Борг: {collection.debt} грн</p>
-//             <h4>Деталі внесків:</h4>
-//             <table>
-//               <thead>
-//                 <tr>
-//                   <th>Користувач</th>
-//                   <th>Квартира</th>
-//                   <th>Площа</th>
-//                   <th>Внесок</th>
-//                   <th>Сплачено</th>
-//                   <th>Залишок</th>
-//                   <th>Дія</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {collection.contributions.map((contribution, i) => (
-//                   <tr key={i}>
-//                     <td>{contribution.name}</td>
-//                     <td>{contribution.apartmentNumber}</td>
-//                     <td>{contribution.area} м²</td>
-//                     <td>{contribution.requiredContribution} грн</td>
-//                     <td>{contribution.paid} грн</td>
-//                     <td>{contribution.remaining} грн</td>
-//                     <td>
-//                       {contribution.remaining > 0 && (
-//                         <button
-//                           onClick={() =>
-//                             handlePayment(collection.purpose, contribution.remaining)
-//                           }
-//                         >
-//                           Оплатити
-//                         </button>
-//                       )}
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-//         ))
-//       ) : (
-//         collections.map((collection, index) => (
-//           <div key={index} className="collection">
-//             <h3>{collection.purpose}</h3>
-//             <p>Ваш платіж: {collection.userPayment.paid} грн</p>
-//             <p>Ваш залишок: {collection.userPayment.remaining} грн</p>
-//             {collection.userPayment.remaining > 0 && (
-//               <button onClick={() => handlePayment(collection.purpose, collection.userPayment.remaining)}>
-//                 Оплатити
-//               </button>
-//             )}
-//           </div>
-//         ))
-//       )}
-//     </div>
-//   );
-
-// return (
-//     <div className="finance-module">
-//       <h2>Фінансовий модуль</h2>
-//       {collections.length === 0 ? (
-//         <p>Наразі немає активних зборів.</p>
-//       ) : (
-//         collections.map((collection, index) => (
-//           <div key={index} className="collection">
-//             <h3>{collection.purpose}</h3>
-//             <p>Загальна сума: {collection.totalAmount} грн</p>
-//             <p>Зібрано: {collection.collectedAmount} грн</p>
-//             <p>Борг: {collection.debt} грн</p>
-//             {collection.userPayment ? (
-//               <>
-//                 <p>Ваш платіж: {collection.userPayment.paid} грн</p>
-//                 <p>Ваш залишок: {collection.userPayment.remaining} грн</p>
-//                 {collection.userPayment.remaining > 0 && (
-//                   <button
-//                     onClick={() =>
-//                       handlePayment(collection.purpose, collection.userPayment.remaining)
-//                     }
-//                   >
-//                     Оплатити
-//                   </button>
-//                 )}
-//               </>
-//             ) : (
-//               <>
-//                 <h4>Деталі внесків:</h4>
-//                 <table>
-//                   <thead>
-//                     <tr>
-//                       <th>Користувач</th>
-//                       <th>Квартира</th>
-//                       <th>Площа</th>
-//                       <th>Внесок</th>
-//                       <th>Сплачено</th>
-//                       <th>Залишок</th>
-//                     </tr>
-//                   </thead>
-//                   <tbody>
-//                     {collection.contributions.map((contribution, i) => (
-//                       <tr key={i}>
-//                         <td>{contribution.name}</td>
-//                         <td>{contribution.apartmentNumber}</td>
-//                         <td>{contribution.area} м²</td>
-//                         <td>{contribution.requiredContribution} грн</td>
-//                         <td>{contribution.paid} грн</td>
-//                         <td>{contribution.remaining} грн</td>
-//                       </tr>
-//                     ))}
-//                   </tbody>
-//                 </table>
-//               </>
-//             )}
-//           </div>
-//         ))
-//       )}
-//     </div>
-//   );
-
-
-
-// client/src/components/FinanceModule.js
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -434,9 +96,6 @@ const FinanceModule = () => {
     
     
     
-    
-    
-    
     } catch (err) {
       console.error('Error initiating payment:', err);
       alert('Помилка створення платежу. Спробуйте ще раз.');
@@ -445,68 +104,67 @@ const FinanceModule = () => {
 
   if (loading) return <p>Завантаження даних...</p>;
   if (error) return <p>{error}</p>;
-
-return (
-  <div className="finance-module">
-    <h2>Фінансовий модуль</h2>
-    {collections.length === 0 ? (
-      <p>Наразі немає активних зборів.</p>
-    ) : (
-      collections.map((collection, index) => (
-        <div key={index} className="collection">
-          <h3>{collection.purpose}</h3>
-          <p>Загальна сума: {collection.totalAmount} грн</p>
-          <p>Зібрано: {collection.collectedAmount} грн</p>
-          <p>Борг: {collection.debt} грн</p>
-          {collection.userPayment ? (
-            <>
-              <p>Ваш платіж: {collection.userPayment.paid} грн</p>
-              <p>Ваш залишок: {collection.userPayment.remaining} грн</p>
-              {collection.userPayment.remaining > 0 && (
-                <button
-                  onClick={() =>
-                    handlePayment(collection.purpose, collection.userPayment.remaining)
-                  }
-                >
-                  Оплатити
-                </button>
-              )}
-            </>
-          ) : (
-            <>
-              <h4>Деталі внесків:</h4>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Користувач</th>
-                    <th>Квартира</th>
-                    <th>Площа</th>
-                    <th>Внесок</th>
-                    <th>Сплачено</th>
-                    <th>Залишок</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {collection.contributions.map((contribution, i) => (
-                    <tr key={i}>
-                      <td>{contribution.name}</td>
-                      <td>{contribution.apartmentNumber}</td>
-                      <td>{contribution.area} м²</td>
-                      <td>{contribution.requiredContribution} грн</td>
-                      <td>{contribution.paid} грн</td>
-                      <td>{contribution.remaining} грн</td>
+  return (
+    <div className="finance-module">
+      {collections.length === 0 ? (
+        <p className="no-collections-message">Наразі немає активних зборів.</p>
+      ) : (
+        collections.map((collection, index) => (
+          <div key={index} className="collection">
+            <h3 className="collection-title">{collection.purpose}</h3>
+            <p className="collection-total">Загальна сума: {collection.totalAmount} грн</p>
+            <p className="collection-collected">Зібрано: {collection.collectedAmount} грн</p>
+            <p className="collection-debt">Борг: {collection.debt} грн</p>
+            {collection.userPayment ? (
+              <>
+                <p className="user-payment-paid">Ваш платіж: {collection.userPayment.paid} грн</p>
+                <p className="user-payment-remaining">Ваш залишок: {collection.userPayment.remaining} грн</p>
+                {collection.userPayment.remaining > 0 && (
+                  <button
+                    className="payment-button"
+                    onClick={() =>
+                      handlePayment(collection.purpose, collection.userPayment.remaining)
+                    }
+                  >
+                    Оплатити
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <h4 className="contributions-header">Деталі внесків:</h4>
+                <table className="contributions-table">
+                  <thead>
+                    <tr className="contributions-table-header">
+                      <th>Користувач</th>
+                      <th>Квартира</th>
+                      <th>Площа</th>
+                      <th>Внесок</th>
+                      <th>Сплачено</th>
+                      <th>Залишок</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </>
-          )}
-        </div>
-      ))
-    )}
-  </div>
-);
-
+                  </thead>
+                  <tbody>
+                    {collection.contributions.map((contribution, i) => (
+                      <tr key={i} className="contributions-row">
+                        <td>{contribution.name}</td>
+                        <td>{contribution.apartmentNumber}</td>
+                        <td>{contribution.area} м²</td>
+                        <td>{contribution.requiredContribution} грн</td>
+                        <td>{contribution.paid} грн</td>
+                        <td>{contribution.remaining} грн</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
+          </div>
+        ))
+      )}
+    </div>
+  );
+  
 
 };
 

@@ -27,7 +27,7 @@ const OsbbStatisticsSchema = new Schema({
   },
   payments: [ // Масив історії платежів
     {
-      userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Хто зробив платіж
+      userId: { type: Schema.Types.ObjectId, required: true }, // Хто зробив платіж
       amount: { type: Number, required: true }, // Сума платежу
       date: { type: Date, required: true, default: Date.now }, // Дата платежу
     },

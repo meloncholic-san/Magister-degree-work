@@ -220,7 +220,7 @@ exports.getPaymentStatus = async (req, res) => {
       );
 
       if (payment) {
-        const { purpose, userId, amount } = payment; // Передбачається, що ці дані вже є у моделі UserPayment
+        const { purpose, userId, amount } = payment;
 
         // Оновлюємо статистику ОСББ
         console.log(`Updating OSBB statistics for purpose: ${purpose}`);
