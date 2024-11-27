@@ -8,6 +8,7 @@ const UserPaymentSchema = new mongoose.Schema({
   currency: { type: String, default: 'UAH' }, // Валюта
   status: { type: String, default: 'pending' }, // Статус (pending, success, failure)
   description: { type: String, required: false }, // Опис платежу
+  purpose: { type : String, required: false}, //ціль платежу
   createdAt: { type: Date, default: Date.now }, // Дата створення
   updatedAt: { type: Date, default: Date.now }, // Останнє оновлення
 });

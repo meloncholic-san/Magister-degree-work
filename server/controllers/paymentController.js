@@ -98,30 +98,23 @@ exports.createPayment = async (req, res) => {
       amount,
       status: 'pending',
       description,
+      purpose, // Додаємо purpose
     });
-
+    console.log("NOVA PLATIZKA",newPayment);
     await newPayment.save();
     console.log(`Payment successfully saved for orderId: ${orderId}`);
 
 
-    // Оновлюємо статистику ОСББ
-    console.log(`Updating OSBB statistics for purpose: ${purpose}`);
-    const osbbStat = await OsbbStatistics.findOne({ purpose });
+    // // Оновлюємо статистику ОСББ
+    // console.log(`Updating OSBB statistics for purpose: ${purpose}`);
+    // const osbbStat = await OsbbStatistics.findOne({ purpose });
 
-    if (osbbStat) 
-      // {
-      //   // Якщо запису про збір із таким призначенням немає, створюємо новий
-      //   const newStat = new OsbbStatistics({
-      //     purpose,
-      //     totalAmount: 0, // Можна передати із запиту, якщо потрібно
-      //     collectedAmount: amount,
-      //     payments: [{ userId, amount }],
-      //   });
-      //   await newStat.save();
-      //   console.log(`Created new OSBB statistic for purpose: ${purpose}`);
-      // } 
-      {
+    // if (osbbStat) 
+    //   {
+
       // Перевірка, чи вже існує платіж від цього користувача
+      console.log(`Перевірка, чи вже існує платіж від цього користувача для платіжки: ${purpose}`);
+      const osbbStat = await OsbbStatistics.findOne({ purpose });
       const userAlreadyPaid = osbbStat.payments.some(payment => String(payment.userId) === String(userId));
 
       if (userAlreadyPaid) {
@@ -133,18 +126,19 @@ exports.createPayment = async (req, res) => {
       }
 
 
-        // Оновлення існуючої статистики
-        osbbStat.collectedAmount = parseFloat(osbbStat.collectedAmount) + parseFloat(amount) || 0; // переконуємося, що це числа
-        osbbStat.debt = Math.max(0, osbbStat.totalAmount - osbbStat.collectedAmount); // перерахунок боргу
+      //   // Оновлення існуючої статистики
+      //   osbbStat.collectedAmount = parseFloat(osbbStat.collectedAmount) + parseFloat(amount) || 0; // переконуємося, що це числа
+      //   osbbStat.debt = Math.max(0, osbbStat.totalAmount - osbbStat.collectedAmount); // перерахунок боргу
 
-        osbbStat.payments.push({ userId, amount });
-        await osbbStat.save();
-        console.log(`Updated OSBB statistic for purpose: ${purpose}`);
-      }
+      //   osbbStat.payments.push({ userId, amount });
+      //   await osbbStat.save();
+      //   console.log(`Updated OSBB statistic for purpose: ${purpose}`);
+      // }
 
 
 
     res.json({
+      orderId,
       data,
       signature,
       url: 'https://www.liqpay.ua/api/3/checkout',
@@ -155,43 +149,105 @@ exports.createPayment = async (req, res) => {
   }
 };
 
-// Статус платежу
-exports.getPaymentStatus = async (req, res) => {
-  console.log('Received request to check payment status');
 
-  const { orderId } = req.params;
-  console.log(`Checking payment status for orderId: ${orderId}`);
+// // Статус платежу
 
-  const data = {
-    public_key: PUBLIC_KEY,
-    action: 'status',
-    version: '3',
-    order_id: orderId,
-  };
+// exports.getPaymentStatus = async (req, res) => {
 
-  console.log('Status request data:', data);
+//   try {
+//     const { orderId } = req.params;
+//     if (!orderId) {
+//       return res.status(400).json({ message: 'Missing orderId' });
+//     }
 
-  const encodedData = Buffer.from(JSON.stringify(data)).toString('base64');
-  const signature = generateSignature(encodedData);
-
-  console.log('Encoded status data (base64):', encodedData);
-  console.log('Generated signature for status request:', signature);
-
-  try {
-    // Отримуємо статус платіжного запиту
-    console.log('Making API request to check payment status');
     
-    const status = await apiRequest('status', encodedData);
+//     const data = Buffer.from(JSON.stringify({
+//       public_key: PUBLIC_KEY,
+//       version: 3,
+//       action: 'status',
+//       order_id: orderId
+//     })).toString('base64');
 
-    console.log(`Received payment status for orderId ${orderId}:`, status);
+//     const response = await apiRequest('/request', data);
 
-    // Оновлюємо статус в базі даних
-    await UserPayment.updateOne({ orderId }, { status: status.status });
-    console.log(`Payment status for orderId ${orderId} updated in database`);
+//     if (response.status === 'success' || response.status === 'sandbox') {
+//       // Оновлюємо статус у базі
+//       await UserPayment.findOneAndUpdate(
+//         { orderId },
+//         { status: response.status, paymentId: response.payment_id, updatedAt: new Date() },
+//         { new: true }
+//       );
+//     } else if (response.status === 'failure') {
+//       await UserPayment.findOneAndUpdate(
+//         { orderId },
+//         { status: 'failure', updatedAt: new Date() },
+//         { new: true }
+//       );
+//     }
 
-    res.json({ status: status.status });
+//     return res.json({ message: `Payment status updated: ${response.status}`, response });
+//   } catch (error) {
+//     console.error('Error fetching payment status:', error.message);
+//     res.status(500).json({ message: 'Error fetching payment status' });
+//   }
+// };
+
+exports.getPaymentStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    if (!orderId) {
+      return res.status(400).json({ message: 'Missing orderId' });
+    }
+
+    const data = Buffer.from(
+      JSON.stringify({
+        public_key: PUBLIC_KEY,
+        version: 3,
+        action: 'status',
+        order_id: orderId,
+      })
+    ).toString('base64');
+
+    const response = await apiRequest('/request', data);
+
+    // Оновлюємо статус платежу у базі
+    if (response.status === 'success' || response.status === 'sandbox') {
+      const payment = await UserPayment.findOneAndUpdate(
+        { orderId },
+        { status: response.status, paymentId: response.payment_id, updatedAt: new Date() },
+        { new: true }
+      );
+
+      if (payment) {
+        const { purpose, userId, amount } = payment; // Передбачається, що ці дані вже є у моделі UserPayment
+
+        // Оновлюємо статистику ОСББ
+        console.log(`Updating OSBB statistics for purpose: ${purpose}`);
+        const osbbStat = await OsbbStatistics.findOne({ purpose });
+
+        if (osbbStat) {
+          osbbStat.collectedAmount = parseFloat(osbbStat.collectedAmount) + parseFloat(amount) || 0; // Переконуємося, що це числа
+          osbbStat.debt = Math.max(0, osbbStat.totalAmount - osbbStat.collectedAmount); // Перерахунок боргу
+
+          osbbStat.payments.push({ userId, amount });
+          await osbbStat.save();
+          console.log(`Updated OSBB statistic for purpose: ${purpose}`);
+        } else {
+          console.warn(`No OSBB statistics found for purpose: ${purpose}`);
+        }
+      }
+    } else if (response.status === 'failure') {
+      await UserPayment.findOneAndUpdate(
+        { orderId },
+        { status: 'failure', updatedAt: new Date() },
+        { new: true }
+      );
+    }
+
+    return res.json({ message: `Payment status updated: ${response.status}`, response });
   } catch (error) {
-    console.error(`Error fetching payment status for orderId ${orderId}:`, error.message);
+    console.error('Error fetching payment status:', error.message);
     res.status(500).json({ message: 'Error fetching payment status' });
   }
 };
