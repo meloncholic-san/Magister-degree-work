@@ -3,7 +3,7 @@ import React from 'react';
 import ChatModule from './ChatModule';
 import VotingModule from './VotingModule'; 
 import FinanceModule from './FinanceModule';
-
+import AdModule from './adModule';
 
 
 const MainPage = () => {
@@ -30,6 +30,10 @@ const MainPage = () => {
                 <section className="module">
                     <h2>Модуль моніторингу інфраструктури</h2>
                     <p>Місце для модуля моніторингу інфраструктури</p>
+                </section>
+                <section className="module">
+                    <h2>Дошка оголошень</h2>
+                    <AdModule /> {/* Виклик нового модуля */}
                 </section>
             </main>
         </div>

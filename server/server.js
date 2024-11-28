@@ -51,6 +51,12 @@ const financeRoutes = require('./routes/financeRoute.js');
 app.use('/api/finance', financeRoutes);
 
 
+const adRoutes = require('./routes/adRoutes');
+
+// Інші підключення
+app.use('/api/ads', adRoutes);
+
+
 // Запускаем планировщик
 scheduleVoteCompletion();
 

@@ -30,6 +30,7 @@ const FinanceModule = () => {
         });
         if (token) {
           const decoded = jwtDecode(token);
+          console.log(token)
           const role = decoded.role || 'user';
           setUserRole(role); // Оновлюємо стан ролі
       }
