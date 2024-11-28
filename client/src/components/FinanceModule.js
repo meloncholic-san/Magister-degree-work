@@ -75,6 +75,7 @@ const FinanceModule = () => {
       form.submit();
       document.body.removeChild(form);
 
+      let attemptCount = 0; // Лічильник спроб
       const interval = setInterval(async () => {
         try {
           const statusResponse = await axios.get(
@@ -91,6 +92,13 @@ const FinanceModule = () => {
           if (statusResponse.data.response.status === 'success' || statusResponse.data.response.status === 'sandbox') {
             clearInterval(interval);
             console.log('Payment completed successfully');
+          } else {
+            attemptCount++;
+            if (attemptCount >= 10) {
+              clearInterval(interval);
+              console.log('Time for payment has passed, try again.');
+              alert('Час на оплату пройшов, спробуйте ще раз.');
+            }
           }
         } catch (error) {
           console.error('Error fetching payment status:', error.message);
@@ -167,19 +175,40 @@ const FinanceModule = () => {
             <p className="collection-total">Загальна сума: {collection.totalAmount} грн</p>
             <p className="collection-collected">Зібрано: {collection.collectedAmount} грн</p>
             <p className="collection-debt">Борг: {collection.debt} грн</p>
+
+            {/* Шкала заповнення */}
+            <div className="progress-bar">
+              <div
+                className="progress-bar-filled"
+                style={{ width: `${(collection.collectedAmount / collection.totalAmount) * 100}%` }}
+              >
+                {collection.collectedAmount > 0 && (
+                <span className="progress-text">
+                {Math.min(((collection.collectedAmount / collection.totalAmount) * 100).toFixed(2), 100)}%
+                </span>
+                )}
+              </div>
+            </div>
+
+
             {collection.userPayment ? (
               <>
-                <p className="user-payment-paid">Ваш платіж: {collection.userPayment.paid} грн</p>
-                <p className="user-payment-remaining">Ваш залишок: {collection.userPayment.remaining} грн</p>
+                {/* Відображення, якщо користувач уже заплатив */}
+                {collection.userPayment.paid > 0 && (
+                  <p className="user-payment-paid">Ваш платіж: {collection.userPayment.paid} грн</p>
+                )}
                 {collection.userPayment.remaining > 0 && (
+                  <div>
+                  <p className="user-payment-remaining">Ваш залишок: {collection.userPayment.remaining} грн</p>
                   <button
                     className="payment-button"
                     onClick={() =>
                       handlePayment(collection.purpose, collection.userPayment.remaining)
                     }
                   >
-                    Оплатити
+                    Сплатити
                   </button>
+                  </div>
                 )}
               </>
             ) : (

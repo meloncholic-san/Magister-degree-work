@@ -703,24 +703,44 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Стилі для заголовків зборів */
 .collection-title {
-  font-size: 1.5em;
-  color: #333;
-  margin-bottom: 10px;
+  font-size: 1.8em;
+  color: #2c3e50; /* Темно-синій колір */
+  font-weight: 600; /* Жирний шрифт */
+  margin-bottom: 12px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Тінь для об'ємного ефекту */
+  border-bottom: 2px solid #3498db; /* Лінія під заголовком */
+  padding-bottom: 4px;
 }
 
+/* Стилі для тексту загальної суми, зібраної суми та боргу */
 .collection-total,
 .collection-collected,
 .collection-debt {
-  font-size: 1em;
-  color: #555;
-  margin: 5px 0;
+  font-size: 1.1em;
+  color: #34495e; /* Темно-сірий колір */
+  margin: 8px 0;
+  font-family: 'Arial', sans-serif; /* Використання більш сучасного шрифту */
 }
 
+/* Стилі для платежів користувача */
 .user-payment-paid,
 .user-payment-remaining {
-  font-size: 1em;
-  color: #444;
+  font-size: 1.1em;
+  color: #1abc9c; /* Колір для підкреслення */
+  font-weight: 500; /* Напівжирний шрифт */
+  margin: 6px 0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(26, 188, 156, 0.1); /* Легкий фон */
+}
+
+/* Додатковий стиль для "Ваш залишок" */
+.user-payment-remaining {
+  color: #e74c3c; /* Червоний колір для підкреслення важливості */
+  background-color: rgba(231, 76, 60, 0.1);
+  border: 1px solid #e74c3c; /* Обвід для підкреслення */
 }
 
 .payment-button {
@@ -1013,3 +1033,42 @@ body {
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* Тінь навколо кнопки */
 }
 
+/* Стилі для шкали заповнення */
+.progress-bar {
+  width: 100%;
+  background-color: #e0e0df; /* Світло-сірий фон */
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+  height: 20px; /* Висота шкали */
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Легке тінювання всередині */
+}
+
+/* Стилі для шкали заповнення */
+.progress-bar {
+  width: 100%;
+  background-color: #e0e0df; /* Світло-сірий фон */
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 8px;
+  height: 20px; /* Висота шкали */
+  position: relative;
+}
+
+.progress-bar-filled {
+  height: 100%;
+  background: linear-gradient(to right, #1e90ff, #00bfff); /* Градієнт від синього до блакитного */
+  transition: width 0.3s ease-in-out; /* Анімація зміни ширини */
+  position: relative; /* Позиція для вкладеного елемента */
+}
+
+.progress-text {
+  position: absolute;
+  width: 100%;
+  top: 50%; /* Вирівнювання по вертикалі */
+  left: 50%; /* Вирівнювання по горизонталі */
+  transform: translate(-50%, -50%); /* Центрування тексту */
+  color: #fff; /* Білий колір тексту */
+  font-weight: bold;
+  text-align: center; /* Центрування тексту */
+}
