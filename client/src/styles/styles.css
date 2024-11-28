@@ -840,3 +840,176 @@ body {
 .modal-button:hover {
   background-color: #0056b3;
 }
+
+
+
+/* Кнопка створення збору */
+.create-collection-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px; /* Ширина кнопки */
+  height: 50px; /* Висота кнопки */
+  border: none; /* Видаляємо стандартну рамку */
+  border-radius: 50%; /* Робимо кнопку круглою */
+  background-color: #007bff; /* Синій фон */
+  color: white; /* Білий текст */
+  font-size: 1.5rem; /* Розмір тексту (+) */
+  cursor: pointer; /* Курсор при наведенні */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тінь */
+  transition: all 0.3s ease; /* Анімація */
+  margin: 0 auto; /* Центруємо кнопку */
+  margin-bottom: 15px;
+}
+
+/* Ефекти при наведенні на кнопку */
+.create-collection-button:hover {
+  background-color: #0056b3; /* Темніший синій колір */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Збільшуємо тінь */
+  transform: scale(1.1); /* Збільшення кнопки */
+}
+
+.create-collection-button:active {
+  transform: scale(1); /* Повернення розміру при кліку */
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1); /* Зменшення тіні */
+}
+
+/* модалка створення нового збору */
+.new-payment-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Темний напівпрозорий фон */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards; /* Анімація появи */
+}
+
+/* Контейнер контенту модалки */
+.new-payment-modal-content{
+  position: relative;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0); /* Світлий градієнт */
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Глибока тінь */
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  transform: scale(0.8);
+  animation: popIn 0.3s forwards; /* Анімація масштабування */
+  font-family: 'Roboto', sans-serif; /* Сучасний шрифт */
+}
+
+/* Хрестик для закриття */
+.new-payment-close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  background: #f2f2f2;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, transform 0.2s;
+}
+.new-payment-close-button:hover {
+  background: #ff6b6b; /* Червоний фон при наведенні */
+  color: white;
+  transform: rotate(90deg); /* Плавне обертання */
+}
+/* Стилі для заголовка */
+.new-payment-header {
+  font-size: 24px; /* Розмір шрифта */
+  font-weight: bold; /* Жирний шрифт */
+  color: #333; /* Колір тексту */
+  margin-bottom: 16px; /* Відступ знизу */
+}
+/* Стилі для мітки */
+.new-payment-label {
+  display: block; /* Відображення блоку */
+  margin-bottom: 12px; /* Відступ знизу */
+  font-size: 16px; /* Розмір шрифта */
+  color: #555; /* Колір тексту */
+}
+
+/* Поля введення */
+.new-payment-modal-input {
+  width: calc(100% - 10px);
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.new-payment-modal-input:focus {
+  border-color: #4caf50; /* Зелений акцент при фокусі */
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+/* Кнопка створення */
+.new-payment-create-button {
+  background: linear-gradient(145deg, #3b8ef2, #2a6cbf); /* Синій градієнт */
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  box-shadow: 0 8px 15px rgba(76, 175, 80, 0.2); /* Тінь для кнопки */
+  transition: all 0.3s ease;
+}
+
+
+/* Анімація відкриття модалки */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popIn {
+  to {
+    transform: scale(1);
+  }
+}
+
+
+.details-button {
+  padding: 5px 5px; /* Відступи всередині кнопки */
+  background-color: #007bff; /* Основний колір фону */
+  color: white; /* Колір тексту */
+  font-size: 14px; /* Розмір шрифту */
+  font-weight: bold; /* Жирний шрифт */
+  border: none; /* Без бордера */
+  border-radius: 5px; /* Округлені кути */
+  cursor: pointer; /* Курсор при наведенні на кнопку */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Плавні ефекти */
+  margin-top: 10px; /* Відступ зверху */
+}
+
+.details-button:hover {
+  background-color: #0056b3; /* Темніший колір фону при наведенні */
+  transform: translateY(-3px); /* Легкий підйом кнопки */
+}
+
+.details-button:focus {
+  outline: none; /* Прибираємо стандартний контур при фокусі */
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* Тінь навколо кнопки */
+}
+

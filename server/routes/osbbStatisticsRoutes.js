@@ -4,7 +4,7 @@ const osbbStatisticsController = require('../controllers/osbbStatisticsControlle
 
 // Маршрути
 router.get('/', osbbStatisticsController.getAllStatistics); 
-router.post('/', osbbStatisticsController.createStatistic); 
+router.post('/create-collection', osbbStatisticsController.createStatistic); 
 router.delete('/:id', osbbStatisticsController.deleteStatistic); 
 
 

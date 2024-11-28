@@ -12,6 +12,7 @@ exports.getAllStatistics = async (req, res) => {
   }
 };
 
+
 // Створити новий збір
 exports.createStatistic = async (req, res) => {
   const { purpose, totalAmount } = req.body;
@@ -21,9 +22,9 @@ exports.createStatistic = async (req, res) => {
   }
 
   try {
-    const newStatistic = new OsbbStatistics({ purpose, totalAmount });
+    const newStatistic = new OsbbStatistics({ purpose, totalAmount, collectedAmount: 0 });
     await newStatistic.save();
-    res.status(201).json(newStatistic);
+    res.status(201).json({ message: 'Збір створено успішно', newStatistic });
   } catch (error) {
     console.error('Error creating statistic:', error.message);
     res.status(500).json({ message: 'Error creating statistic' });
