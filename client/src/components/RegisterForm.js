@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 const RegisterForm = () => {
     const [formData, setFormData] = useState({
         username: '',
-        email: '', // Добавлено поле для email
+        email: '',
         password: '',
         firstName: '',
         lastName: '',
@@ -40,34 +40,39 @@ const RegisterForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Реєстрація</h2>
-            <div>
-                <label>Логін</label>
-                <input type="text" name="username" value={formData.username} onChange={handleChange} required />
+        <div className="form-div">
+        <form className="form-container" onSubmit={handleSubmit}>
+            <h2 className="form-title">Реєстрація</h2>
+            <div className="form-group">
+                <label className="form-label">Логін</label>
+                <input className="form-input" type="text" name="username" value={formData.username} onChange={handleChange} required />
             </div>
-            <div>
-                <label>Пароль</label>
-                <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+            <div className="form-group">
+                <label className="form-label">Пароль</label>
+                <input className="form-input" type="password" name="password" value={formData.password} onChange={handleChange} required />
             </div>
-            <div>
-                <label>Email</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+            <div className="form-group">
+                <label className="form-label">Email</label>
+                <input className="form-input" type="email" name="email" value={formData.email} onChange={handleChange} required />
             </div>
-            <div>
-                <label>Ім'я</label>
-                <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+            <div className="form-group">
+                <label className="form-label">Ім'я</label>
+                <input className="form-input" type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
             </div>
-            <div>
-                <label>Прізвище</label>
-                <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
+            <div className="form-group">
+                <label className="form-label">Прізвище</label>
+                <input className="form-input" type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
             </div>
-            <div>
-                <label>Номер квартири</label>
-                <input type="text" name="apartmentNumber" value={formData.apartmentNumber} onChange={handleChange} required />
+            <div className="form-group">
+                <label className="form-label">Номер квартири</label>
+                <input className="form-input" type="text" name="apartmentNumber" value={formData.apartmentNumber} onChange={handleChange} required />
             </div>
-            <button type="submit">Зареєструватися</button>
+            <button className="form-button" type="submit">Зареєструватися</button>
+            <p className="switch-form">
+                Уже є акаунт? <a href="/login">Увійти</a>
+            </p>
         </form>
+        </div>
     );
 };
 
