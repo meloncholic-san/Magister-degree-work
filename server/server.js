@@ -60,6 +60,15 @@ app.use('/api/ads', adRoutes);
 // Запускаем планировщик
 scheduleVoteCompletion();
 
+const scheduleRoutes = require("./routes/scheduleRoutes");
+// Підключення роутів
+app.use(scheduleRoutes);
+
+const { scheduleDailyTask } = require("./utils/turnoffSchedule.js");
+
+// Запуск парсера щодня
+scheduleDailyTask();
+
 
 // Запуск сервера
 app.listen(PORT, () => {

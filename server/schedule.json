@@ -1,0 +1,104 @@
+{
+  "outageInfo": {
+    "status": "Світло за нашою адресою є",
+    "updateTime": "– 20:32 29.11.2024"
+  },
+  "П'ятниця": [
+    {
+      "timeSlot": "00:00 - 01:00",
+      "status": "scheduled-maybe"
+    },
+    {
+      "timeSlot": "01:00 - 02:00",
+      "status": "scheduled-maybe"
+    },
+    {
+      "timeSlot": "02:00 - 03:00",
+      "status": "non-scheduled"
+    },
+    {
+      "timeSlot": "03:00 - 04:00",
+      "status": "non-scheduled"
+    },
+    {
+      "timeSlot": "04:00 - 05:00",
+      "status": "scheduled"
+    },
+    {
+      "timeSlot": "05:00 - 06:00",
+      "status": "scheduled"
+    },
+    {
+      "timeSlot": "06:00 - 07:00",
+      "status": "scheduled"
+    },
+    {
+      "timeSlot": "07:00 - 08:00",
+      "status": "scheduled"
+    },
+    {
+      "timeSlot": "08:00 - 09:00",
+      "status": "scheduled-maybe"
+    },
+    {
+      "timeSlot": "09:00 - 10:00",
+      "status": "scheduled-maybe"
+    },
+    {
+      "timeSlot": "10:00 - 11:00",
+      "status": "scheduled-maybe"
+    },
+    {
+      "timeSlot": "11:00 - 12:00",
+      "status": "non-scheduled"
+    },
+    {
+      "timeSlot": "12:00 - 13:00",
+      "status": "non-scheduled"
+    },
+    {
+      "timeSlot": "13:00 - 14:00",
+      "status": "scheduled"
+    },
+    {
+      "timeSlot": "14:00 - 15:00",
+      "status": "scheduled"
+    },
+    {
+      "timeSlot": "15:00 - 16:00",
+      "status": "scheduled"
+    },
+    {
+      "timeSlot": "16:00 - 17:00",
+      "status": "scheduled"
+    },
+    {
+      "timeSlot": "17:00 - 18:00",
+      "status": "scheduled-maybe"
+    },
+    {
+      "timeSlot": "18:00 - 19:00",
+      "status": "scheduled-maybe"
+    },
+    {
+      "timeSlot": "19:00 - 20:00",
+      "status": "scheduled-maybe"
+    },
+    {
+      "timeSlot": "20:00 - 21:00",
+      "status": "non-scheduled"
+    },
+    {
+      "timeSlot": "21:00 - 22:00",
+      "status": "non-scheduled"
+    },
+    {
+      "timeSlot": "22:00 - 23:00",
+      "status": "scheduled"
+    },
+    {
+      "timeSlot": "23:00 - 24:00",
+      "status": "scheduled"
+    }
+  ]
+}

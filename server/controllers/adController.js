@@ -50,7 +50,6 @@ exports.getActiveAds = async (req, res) => {
   };
   
 
-
 // Змінити статус оголошення на "completed"
 exports.markAdAsCompleted = async (req, res) => {
   try {
