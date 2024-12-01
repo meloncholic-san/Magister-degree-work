@@ -66,6 +66,14 @@ app.use(scheduleRoutes);
 
 const { scheduleDailyTask } = require("./utils/turnoffSchedule.js");
 
+
+const infrastructureRoutes = require('./routes/infrastructureRoutes');
+app.use('/api', infrastructureRoutes);
+
+
+
+
+
 // Запуск парсера щодня
 scheduleDailyTask();
 

@@ -5,6 +5,8 @@ import VotingModule from './VotingModule';
 import FinanceModule from './FinanceModule';
 import AdModule from './adModule';
 import Schedule from './TurnOffSchedule';
+import InfrastructureModule from './InfrastructureModule';
+
 
 const MainPage = () => {
     return (
@@ -29,7 +31,8 @@ const MainPage = () => {
                 </section>
                 <section className="module">
                     <h2>Модуль моніторингу інфраструктури</h2>
-                    <Schedule />
+                    {/* <Schedule /> */}
+                    <InfrastructureModule />
                 </section>
                 <section className="module">
                     <h2>Дошка оголошень</h2>
