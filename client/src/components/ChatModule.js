@@ -119,7 +119,7 @@ const ChatModule = () => {
 
     return (
         <div className="chat-container">
-            <h2>Чат</h2>
+            <h2 className="chat-name">Чат</h2>
             {user && <p>Ласкаво просимо, {user.firstName} {user.lastName}!</p>}
 
             <div className="messages-container" ref={containerRef}>

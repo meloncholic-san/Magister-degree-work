@@ -1,42 +1,27 @@
-//client/src/components/MainPage.js
 import React from 'react';
+import { Link } from 'react-router-dom';
 import ChatModule from './ChatModule';
 import VotingModule from './VotingModule'; 
 import FinanceModule from './FinanceModule';
-import AdModule from './adModule';
-import Schedule from './TurnOffSchedule';
+import AdModule from './AdModule';
 import InfrastructureModule from './InfrastructureModule';
-
 
 const MainPage = () => {
     return (
-        <div className="container">
-            <header className="header">
-                <h1>Панель керування ОСББ</h1>
-            </header>
+        <div className="main-container">
+          <Header />
 
-            <main className="main">
-                <section className="module">
-                    <h2>Модуль комунікації</h2>
+            <main className="main-layout">
+                <section className="main-ads" id="ads">
+                    <h2 className="main-ads-title">Оголошення</h2>
+                    <AdModule />
+                </section>
+                <section className="main-chat">
                     <ChatModule />
                 </section>
-                <section className="module">
-                    <h2>Модуль прийняття колективних рішень</h2>
-                    <VotingModule />
-                </section>
-                <section className="module">
-                    <h2>Фінансовий модуль</h2>
-
-                    <FinanceModule /> 
-                </section>
-                <section className="module">
-                    <h2>Модуль моніторингу інфраструктури</h2>
-                    {/* <Schedule /> */}
-                    <InfrastructureModule />
-                </section>
-                <section className="module">
-                    <h2>Дошка оголошень</h2>
-                    <AdModule /> {/* Виклик нового модуля */}
+                <section className="main-finance" id="finance">
+                    <h2 className="main-finance-title">Фінансовий модуль</h2>
+                    <FinanceModule />
                 </section>
             </main>
         </div>

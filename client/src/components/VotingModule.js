@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Header from './Header';
 const voteBarColors = [
   '#1E90FF', // DodgerBlue
   '#FF4500', // OrangeRed
@@ -258,10 +258,11 @@ const VotingModule = () => {
   }, []);
 
 
-
-  
   return (
+    <div className="voting-container"> 
+    <Header />
     <div className="voting-module">
+
  {/* Current Vote Section */}
 <div>
   <h2>Поточне голосування</h2>
@@ -473,6 +474,7 @@ const VotingModule = () => {
         )}
 
     <ToastContainer />
+    </div>
     </div>
   );
 
