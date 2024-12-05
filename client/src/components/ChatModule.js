@@ -1,7 +1,6 @@
 
+// client/src/components/ChatModule.js
 
-// client/src/components/ChatModule.js
-// client/src/components/ChatModule.js
 import React, { useState, useEffect, useRef } from 'react';
 import { jwtDecode } from "jwt-decode";
 
@@ -9,7 +8,9 @@ const ChatModule = () => {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
     const [user, setUser] = useState(null);
-    const messagesEndRef = useRef(null); // Реф для прокрутки
+    const [page, setPage] = useState(1); 
+    const messagesEndRef = useRef(null); 
+    const containerRef = useRef(null); 
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
@@ -29,20 +30,47 @@ const ChatModule = () => {
 
         const fetchMessages = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/messages');
+                const limit = 10;
+                const response = await fetch(`http://localhost:5000/api/messages?page=${page}&limit=${limit}`);
                 const data = await response.json();
-                setMessages(data);
+                setMessages((prevMessages) => [...prevMessages, ...data]);
             } catch (error) {
                 console.error('Ошибка при загрузке сообщений:', error);
             }
         };
 
         fetchMessages();
-    }, []);
+    }, [page]);
 
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    // Додавання обробника прокручування
+    useEffect(() => {
+        const handleScroll = () => {
+            if (containerRef.current) {
+                const scrollTop = containerRef.current.scrollTop;
+                const scrollHeight = containerRef.current.scrollHeight;
+                const clientHeight = containerRef.current.clientHeight;
+
+                if (scrollTop + clientHeight >= scrollHeight - 5) {
+                    // Завантаження нових повідомлень, якщо користувач досягнув нижньої частини
+                    setPage((prevPage) => prevPage + 1);
+                }
+            }
+        };
+
+        const container = containerRef.current;
+        container.addEventListener('scroll', handleScroll);
+
+        // Очищення обробника при демонтажі компонента
+        return () => {
+            if (container) {
+                container.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, []);
 
     const handleDelete = async (id) => {
         const token = localStorage.getItem('token');
@@ -94,7 +122,7 @@ const ChatModule = () => {
             <h2>Чат</h2>
             {user && <p>Ласкаво просимо, {user.firstName} {user.lastName}!</p>}
 
-            <div className="messages-container">
+            <div className="messages-container" ref={containerRef}>
                 {messages && messages.length > 0 ? (
                     messages.map((msg) => (
                         <div key={msg._id} className="message">
@@ -102,7 +130,6 @@ const ChatModule = () => {
                                 <strong>
                                     {msg.user?.firstName} {msg.user?.lastName} (Квартира {msg.user?.apartment}):
                                 </strong>
-                                {/* Кнопка удаления в правом верхнем углу */}
                                 {(msg.user?.firstName === user?.firstName && msg.user?.lastName === user?.lastName) || 
                                  ['admin', 'super-user'].includes(user?.role) ? (
                                     <button

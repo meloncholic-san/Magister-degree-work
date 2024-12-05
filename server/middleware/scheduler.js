@@ -3,7 +3,7 @@
 const schedule = require('node-schedule');
 const Vote = require('../models/Vote');
 
-// Функция для планирования завершения голосований
+// Функція для планування завершення поточного голосування
 const scheduleVoteCompletion = () => {
   schedule.scheduleJob('*/1 * * * *', async () => {
     const now = new Date();
@@ -12,7 +12,7 @@ const scheduleVoteCompletion = () => {
     for (const vote of votesToComplete) {
       vote.status = 'completed';
       await vote.save();
-      console.log(`Голосование "${vote.question}" завершено автоматически.`);
+      console.log(`Голосовання "${vote.question}" завершено автоматично.`);
     }
   });
 };

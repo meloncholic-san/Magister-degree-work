@@ -1,4 +1,4 @@
-
+//server/utils/turnoffSchedule.js
 const puppeteer = require('puppeteer-extra');
 const fs = require('fs');
 const path = './server/lastRun.txt';
@@ -20,8 +20,8 @@ function shouldRunToday() {
     const lastRunDate = new Date(fs.readFileSync(path, 'utf8'));
     const now = new Date();
 
-    // Перевіряємо, чи пройшов більше одного дня від останнього виконання
-    return now - lastRunDate >= 24 * 60 * 60 * 1000; // 24 години в мілісекундах
+    // Перевіряємо, чи пройшов більше 8 годин від останнього виконання
+    return now - lastRunDate >= 8 * 60 * 60 * 1000; // 8 години в мілісекундах
 }
 
 // Функція для запису часу виконання
@@ -57,7 +57,7 @@ async function fetchTableFromWebsite() {
         return document.querySelector('#street')?.value || null;
     });
 
-    if (streetName === 'вул. Антоновича') {
+    if (streetName === 'вул. Яблонської') {
         console.log('Street name entered correctly.');
     } else {
         console.log('Street name entered incorrectly or not found.');
@@ -136,7 +136,7 @@ function processTable(htmlString, outageInfo) {
     };
 
     const additionalQueryTimes = [];
-    let lastScheduledTime = null; // Для отслеживания времени последнего обнаруженного scheduled
+    let lastScheduledTime = null; // Для відстежування часу останього обнаруженного scheduled
 
     rows.forEach((row) => {
         const day = row.querySelector("td div")?.textContent.trim();
@@ -183,12 +183,12 @@ function processTable(htmlString, outageInfo) {
 }
 
 
-// Функція для запуску щоденно о 00:00
+// Функція для запуску щоденно о 01:00
 function scheduleDailyTask() {
     const now = new Date();
     const nextMidnight = new Date(now);
     nextMidnight.setDate(now.getDate() + 1);
-    nextMidnight.setHours(0, 0, 0, 0);
+    nextMidnight.setHours(1, 0, 0, 0);
 
     const timeToMidnight = nextMidnight - now;
     console.log(`Час до опівночі: ${timeToMidnight / 1000} секунд`);
@@ -207,3 +207,9 @@ function scheduleDailyTask() {
 // // Запускаємо процес
 // scheduleDailyTask();
 module.exports = { scheduleDailyTask };
+
+
+
+
+
+

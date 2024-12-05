@@ -10,8 +10,7 @@ exports.verifyToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET);
         req.user = decoded; // Зберігаємо розшифровані дані токена в req.user
-        // console.log('Decoded token:', decoded);//////////////////////////////////////////////////////////перевірка генерації токена
-
+        // console.log('Decoded token:', decoded);//перевірка генерації токена
         next();
     } catch (error) {
         res.status(403).json({ message: 'Недійсний токен' });

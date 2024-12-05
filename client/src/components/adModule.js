@@ -1,6 +1,5 @@
 
 // //client/src/components/adModule.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode'; 

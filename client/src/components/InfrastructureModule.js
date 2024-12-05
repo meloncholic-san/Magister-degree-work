@@ -551,9 +551,218 @@
 // export default InfrastructureModule;
 
 
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import { jwtDecode } from 'jwt-decode';
+
+// const token = localStorage.getItem('token');
+
+// const InfrastructureModule = () => {
+//   const [infrastructure, setInfrastructure] = useState({
+//     cargoElevatorStatus: '',
+//     passengerElevatorStatus: '',
+//     utilityStatus: '',
+//   });
+//   const [statistics, setStatistics] = useState({
+//     waterConsumption: 0,
+//     gasConsumption: 0,
+//     electricityConsumption: 0,
+//   });
+//   const [loading, setLoading] = useState(false);
+//   const [message, setMessage] = useState('');
+//   const [user, setUser] = useState(null);
+//   const [month, setMonth] = useState(new Date().getMonth() + 1); // Поточний місяць (1-12)
+//   const [year, setYear] = useState(new Date().getFullYear()); // Поточний рік
+
+//   // Завантаження інформації про користувача
+//   useEffect(() => {
+//     if (token) {
+//       const decoded = jwtDecode(token);
+//       setUser({
+//         id: decoded.id,
+//         firstName: decoded.firstName,
+//         lastName: decoded.lastName,
+//         role: decoded.role,
+//       });
+//     }
+//   }, []);
+
+//   // Функція для отримання статусу інфраструктури
+//   const fetchInfrastructureStatus = async () => {
+//     setLoading(true);
+//     try {
+//       const response = await axios.get('http://localhost:5000/api/infrastructure', {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+//       setInfrastructure(response.data);
+//     } catch (error) {
+//       console.error('Помилка при отриманні статусу інфраструктури:', error);
+//       setMessage('Не вдалося завантажити статус інфраструктури');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // Функція для отримання статистики споживання
+//   const fetchStatistics = async (month, year) => {
+//     setLoading(true);
+//     try {
+//       const response = await axios.get('http://localhost:5000/api/consumption', {
+//         params: { month, year },
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+//       setStatistics(response.data);
+//     } catch (error) {
+//       console.error('Помилка при отриманні статистики споживання:', error);
+//       setMessage('Не вдалося завантажити статистику споживання');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // Викликаємо fetchStatistics при зміні місяця чи року
+//   useEffect(() => {
+//     fetchStatistics(month, year);
+//   }, [month, year]);
+
+//   // Функція для оновлення статусу інфраструктури
+//   const updateInfrastructureStatus = async () => {
+//     setLoading(true);
+//     try {
+//       const response = await axios.put(
+//         'http://localhost:5000/api/infrastructure',
+//         infrastructure,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+//       setInfrastructure(response.data);
+//       setMessage('Статус інфраструктури успішно оновлено');
+//     } catch (error) {
+//       console.error('Помилка при оновленні статусу інфраструктури:', error);
+//       setMessage('Не вдалося оновити статус інфраструктури');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // Завантаження даних при першому рендері
+//   useEffect(() => {
+//     fetchInfrastructureStatus();
+//   }, []);
+
+//   return (
+//     <div>
+//       <h2>Статус Інфраструктури</h2>
+//       {loading ? (
+//         <p>Завантаження...</p>
+//       ) : (
+//         <div>
+//           {user && user.role === 'admin' ? (
+//             <form
+//               onSubmit={(e) => {
+//                 e.preventDefault();
+//                 updateInfrastructureStatus();
+//               }}
+//             >
+//               <label>
+//                 Статус вантажного ліфта:
+//                 <select
+//                   value={infrastructure.cargoElevatorStatus}
+//                   onChange={(e) =>
+//                     setInfrastructure({ ...infrastructure, cargoElevatorStatus: e.target.value })
+//                   }
+//                 >
+//                   <option value="Норма">Норма</option>
+//                   <option value="Вимкнуто">Вимкнуто</option>
+//                   <option value="Обслуговується">Обслуговується</option>
+//                 </select>
+//               </label>
+//               <br />
+//               <label>
+//                 Статус пасажирського ліфта:
+//                 <select
+//                   value={infrastructure.passengerElevatorStatus}
+//                   onChange={(e) =>
+//                     setInfrastructure({ ...infrastructure, passengerElevatorStatus: e.target.value })
+//                   }
+//                 >
+//                   <option value="Норма">Норма</option>
+//                   <option value="Вимкнуто">Вимкнуто</option>
+//                   <option value="Обслуговується">Обслуговується</option>
+//                 </select>
+//               </label>
+//               <br />
+//               <label>
+//                 Статус комунальних послуг:
+//                 <input
+//                   type="text"
+//                   value={infrastructure.utilityStatus}
+//                   onChange={(e) =>
+//                     setInfrastructure({ ...infrastructure, utilityStatus: e.target.value })
+//                   }
+//                 />
+//               </label>
+//               <br />
+//               <button type="submit">Оновити статус</button>
+//             </form>
+//           ) : (
+//             <div>
+//               <p>Статус вантажного ліфта: {infrastructure.cargoElevatorStatus}</p>
+//               <p>Статус пасажирського ліфта: {infrastructure.passengerElevatorStatus}</p>
+//               <p>Статус комунальних послуг: {infrastructure.utilityStatus}</p>
+//             </div>
+//           )}
+
+//           <div>
+//             <h3>Статистика споживання</h3>
+//             <label>
+//               Місяць:
+//               <input
+//                 type="month"
+//                 value={`${year}-${month.toString().padStart(2, '0')}`}
+//                 onChange={(e) => {
+//                   const [selectedYear, selectedMonth] = e.target.value.split('-');
+//                   setYear(Number(selectedYear));
+//                   setMonth(Number(selectedMonth));
+//                 }}
+//               />
+//             </label>
+//             <div>
+//               <p>Витрати води: {statistics.waterConsumption} м³</p>
+//               <p>Витрати газу: {statistics.gasConsumption} м³</p>
+//               <p>Витрати електроенергії: {statistics.electricityConsumption} кВт·год</p>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//       {message && <p>{message}</p>}
+//     </div>
+//   );
+// };
+
+// export default InfrastructureModule;
+
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
+import DatePicker from 'react-datepicker';
+import { registerLocale } from 'react-datepicker';
+import uk from 'date-fns/locale/uk';
+import 'react-datepicker/dist/react-datepicker.css';
+import Schedule from './TurnOffSchedule';
+
+
+
+registerLocale('uk', uk); // Реєструємо українську локалізацію
 
 const token = localStorage.getItem('token');
 
@@ -571,8 +780,7 @@ const InfrastructureModule = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [user, setUser] = useState(null);
-  const [month, setMonth] = useState(new Date().getMonth() + 1); // Поточний місяць (1-12)
-  const [year, setYear] = useState(new Date().getFullYear()); // Поточний рік
+  const [selectedDate, setSelectedDate] = useState(new Date()); // Поточна дата
 
   // Завантаження інформації про користувача
   useEffect(() => {
@@ -624,10 +832,12 @@ const InfrastructureModule = () => {
     }
   };
 
-  // Викликаємо fetchStatistics при зміні місяця чи року
+  // Викликаємо fetchStatistics при зміні дати
   useEffect(() => {
+    const month = selectedDate.getMonth() + 1; // Місяць (1-12)
+    const year = selectedDate.getFullYear(); // Рік
     fetchStatistics(month, year);
-  }, [month, year]);
+  }, [selectedDate]);
 
   // Функція для оновлення статусу інфраструктури
   const updateInfrastructureStatus = async () => {
@@ -657,94 +867,119 @@ const InfrastructureModule = () => {
     fetchInfrastructureStatus();
   }, []);
 
-  return (
-    <div>
-      <h2>Статус Інфраструктури</h2>
-      {loading ? (
-        <p>Завантаження...</p>
-      ) : (
-        <div>
-          {user && user.role === 'admin' ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                updateInfrastructureStatus();
-              }}
-            >
-              <label>
-                Статус вантажного ліфта:
-                <select
-                  value={infrastructure.cargoElevatorStatus}
-                  onChange={(e) =>
-                    setInfrastructure({ ...infrastructure, cargoElevatorStatus: e.target.value })
-                  }
-                >
-                  <option value="Норма">Норма</option>
-                  <option value="Вимкнуто">Вимкнуто</option>
-                  <option value="Обслуговується">Обслуговується</option>
-                </select>
-              </label>
-              <br />
-              <label>
-                Статус пасажирського ліфта:
-                <select
-                  value={infrastructure.passengerElevatorStatus}
-                  onChange={(e) =>
-                    setInfrastructure({ ...infrastructure, passengerElevatorStatus: e.target.value })
-                  }
-                >
-                  <option value="Норма">Норма</option>
-                  <option value="Вимкнуто">Вимкнуто</option>
-                  <option value="Обслуговується">Обслуговується</option>
-                </select>
-              </label>
-              <br />
-              <label>
-                Статус комунальних послуг:
-                <input
-                  type="text"
-                  value={infrastructure.utilityStatus}
-                  onChange={(e) =>
-                    setInfrastructure({ ...infrastructure, utilityStatus: e.target.value })
-                  }
-                />
-              </label>
-              <br />
-              <button type="submit">Оновити статус</button>
-            </form>
-          ) : (
-            <div>
-              <p>Статус вантажного ліфта: {infrastructure.cargoElevatorStatus}</p>
-              <p>Статус пасажирського ліфта: {infrastructure.passengerElevatorStatus}</p>
-              <p>Статус комунальних послуг: {infrastructure.utilityStatus}</p>
-            </div>
-          )}
+//   <div>
+//   <Schedule />
+// </div>
 
-          <div>
-            <h3>Статистика споживання</h3>
-            <label>
-              Місяць:
+return (
+  <div className="infrastructure-container">
+      <div className="infrastructure-schedule">
+        <Schedule />
+      </div>
+    <h2 className="infrastructure-title">Статус Інфраструктури</h2>
+    {loading ? (
+      <p className="infrastructure-loading">Завантаження...</p>
+    ) : (
+      <div className="infrastructure-content">
+        {user && user.role === "admin" ? (
+          <form
+            className="infrastructure-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              updateInfrastructureStatus();
+            }}
+          >
+            <label className="form-label">
+              Статус вантажного ліфта:
+              <select
+                className="form-select"
+                value={infrastructure.cargoElevatorStatus}
+                onChange={(e) =>
+                  setInfrastructure({ ...infrastructure, cargoElevatorStatus: e.target.value })
+                }
+              >
+                <option value="Норма">Норма</option>
+                <option value="Вимкнуто">Вимкнуто</option>
+                <option value="Обслуговується">Обслуговується</option>
+              </select>
+            </label>
+            <label className="form-label">
+              Статус пасажирського ліфта:
+              <select
+                className="form-select"
+                value={infrastructure.passengerElevatorStatus}
+                onChange={(e) =>
+                  setInfrastructure({ ...infrastructure, passengerElevatorStatus: e.target.value })
+                }
+              >
+                <option value="Норма">Норма</option>
+                <option value="Вимкнуто">Вимкнуто</option>
+                <option value="Обслуговується">Обслуговується</option>
+              </select>
+            </label>
+            <label className="form-label">
+              Статус комунальних послуг:
               <input
-                type="month"
-                value={`${year}-${month.toString().padStart(2, '0')}`}
-                onChange={(e) => {
-                  const [selectedYear, selectedMonth] = e.target.value.split('-');
-                  setYear(Number(selectedYear));
-                  setMonth(Number(selectedMonth));
-                }}
+                className="form-input"
+                type="text"
+                value={infrastructure.utilityStatus}
+                onChange={(e) =>
+                  setInfrastructure({ ...infrastructure, utilityStatus: e.target.value })
+                }
               />
             </label>
-            <div>
-              <p>Витрати води: {statistics.waterConsumption} м³</p>
-              <p>Витрати газу: {statistics.gasConsumption} м³</p>
-              <p>Витрати електроенергії: {statistics.electricityConsumption} кВт·год</p>
-            </div>
+            <button className="form-button" type="submit">
+              Оновити статус
+            </button>
+          </form>
+        ) : (
+          <div className="infrastructure-status">
+            <p className="status-item">
+              Статус вантажного ліфта: <span>{infrastructure.cargoElevatorStatus}</span>
+            </p>
+            <p className="status-item">
+              Статус пасажирського ліфта: <span>{infrastructure.passengerElevatorStatus}</span>
+            </p>
+            <p className="status-item">
+              Статус комунальних послуг: <span>{infrastructure.utilityStatus}</span>
+            </p>
           </div>
+        )}
+
+        <div className="infrastructure-statistics">
+          <h3 className="statistics-title">Статистика споживання</h3>
+          <label className="form-label">
+            Оберіть місяць і рік:
+            <DatePicker
+              className="date-picker"
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              dateFormat="MM/yyyy"
+              showMonthYearPicker
+              locale="uk"
+            />
+          </label>
+        <div className="statistics-data">
+          <p className="statistics-item">
+            Витрати води: <span className="statistics-value">{statistics.waterConsumption} м³</span>
+          </p>
+          <p className="statistics-item">
+            Витрати газу: <span className="statistics-value">{statistics.gasConsumption} м³</span>
+          </p>
+          <p className="statistics-item">
+            Витрати електроенергії: <span className="statistics-value">{statistics.electricityConsumption} кВт·год</span>
+          </p>
         </div>
-      )}
-      {message && <p>{message}</p>}
-    </div>
-  );
+
+        </div>
+
+
+      </div>
+    )}
+    {message && <p className="infrastructure-message">{message}</p>}
+  </div>
+);
+
 };
 
 export default InfrastructureModule;

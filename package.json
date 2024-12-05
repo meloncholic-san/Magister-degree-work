@@ -20,6 +20,7 @@
     "concurrently": "^9.1.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "fs": "^0.0.1-security",
@@ -35,9 +36,11 @@
     "puppeteer-extra-plugin-adblocker": "^2.13.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "react": "^18.3.1",
+    "react-datepicker": "^7.5.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
-    "react-toastify": "^10.0.6"
+    "react-toastify": "^10.0.6",
+    "websocket": "^1.0.35"
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {

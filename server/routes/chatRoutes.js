@@ -7,24 +7,31 @@ const router = express.Router();
 const Message = require('../models/Message.js'); // Модель повідомлень
 const { verifyToken } = require('../middleware/authMiddleware'); // Імпортуємо middleware
 
-// Отримати всі повідомлення, відсортовані від найновішого до найстарішого
+// Отримати всі повідомлення з пагінацією, відсортовані від найновішого до найстарішого
 router.get('/', async (req, res) => {
     try {
-        const messages = await Message.find() //.sort({ createdAt: -1 }); // Сортуємо по полю createdAt, -1 для від найновішого
+        const page = parseInt(req.query.page) || 1; // Номер сторінки (за замовчуванням 1)
+        const limit = parseInt(req.query.limit) || 10; // Кількість повідомлень на сторінку (за замовчуванням 10)
+
+        const messages = await Message.find()
+            .skip((page - 1) * limit) // Пропускаємо повідомлення на попередніх сторінках
+            .limit(limit); // Обмежуємо кількість повідомлень на поточній сторінці
+
         res.json(messages);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Помилка сервера' });
     }
 });
 
-// Додати нове повідомлення (потребує авторизації)
+
+// Додати нове повідомлення
 router.post('/', verifyToken, async (req, res) => {
     try {
         const { text } = req.body;
 
         // Використовуємо розшифровані дані користувача з токена
         const user = req.user;
-
         const newMessage = new Message({
             text,
             user: {
@@ -33,7 +40,6 @@ router.post('/', verifyToken, async (req, res) => {
                 apartment: user.apartmentNumber,
             },
         });
-
         await newMessage.save();
         res.status(201).json(newMessage);
     } catch (error) {
@@ -81,3 +87,4 @@ router.delete('/:id', verifyToken, async (req, res) => {
 
 
 module.exports = router;
+

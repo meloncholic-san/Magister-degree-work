@@ -11,7 +11,7 @@ const { getApartmentArea } = require('../utils/apartmentUtils');
 exports.getActiveCollections = async (req, res) => {
   try {
     const userId = req.user.userId; // ID поточного користувача
-    const isAdmin = req.user.role === 'admin'; // Перевірка, чи є користувач адміністратором
+    const isAdmin = req.user.role === 'admin'; 
 
     // Отримуємо активні збори
     const collections = await OsbbStatistics.find({ debt: { $gt: 0 } }).populate('payments.userId', 'username apartmentNumber');
@@ -26,8 +26,6 @@ exports.getActiveCollections = async (req, res) => {
           const userPaid = collection.payments.find(
             (p) => p.userId && p.userId.toString() === user._id.toString()
           )?.amount || 0;
-
-          // Виправлення проблеми з плаваючою комою
           const remaining = userContribution - userPaid;
           return {
             name: user.username,
@@ -53,8 +51,6 @@ exports.getActiveCollections = async (req, res) => {
         const userPaid = collection.payments.find(
           (p) => p.userId && p.userId.toString() === userId
         )?.amount || 0;
-
-        // Виправлення проблеми з плаваючою комою
         const remaining = userContribution - userPaid;
 
         return {

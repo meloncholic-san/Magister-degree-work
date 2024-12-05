@@ -1,3 +1,4 @@
+//server/controllers/infrastructureController.js
 const Infrastructure = require('../models/infrastructure');
 const ConsumptionStatistics = require('../models/consumptionStatisticsModel');
 

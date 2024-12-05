@@ -20,12 +20,6 @@ connectDB();
 // Разрешаем все домены
 app.use(cors());
 
-// Если нужно, можно ограничить доступ только к вашему frontend домену:
-// app.use(cors({ origin: 'http://localhost:3000' }));
-
-// Подключите остальные middleware и маршруты
-
-
 // Middleware для обробки JSON
 app.use(express.json());
 
@@ -82,3 +76,4 @@ scheduleDailyTask();
 app.listen(PORT, () => {
     console.log(`Сервер запущено на порту ${PORT}`);
 });
+
