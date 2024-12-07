@@ -2,14 +2,14 @@
   "outageInfo": {
     "status": "В даний момент відсутня електроенергія",
     "reason": "Стабілізаційне відключення (Згідно графіку погодинних відключень)",
-    "startTime": "19:00 05.12.2024",
-    "estimatedRecovery": "до 23:00 05.12.2024",
-    "updateTime": "– 18:48 05.12.2024"
+    "startTime": "16:00 06.12.2024",
+    "estimatedRecovery": "до 20:00 06.12.2024",
+    "updateTime": "– 17:46 06.12.2024"
   },
-  "Четвер": [
+  "П'ятниця": [
     {
       "timeSlot": "00:00 - 01:00",
-      "status": "non-scheduled"
+      "status": "scheduled"
     },
     {
       "timeSlot": "01:00 - 02:00",
@@ -17,35 +17,35 @@
     },
     {
       "timeSlot": "02:00 - 03:00",
-      "status": "scheduled"
+      "status": "scheduled-maybe"
     },
     {
       "timeSlot": "03:00 - 04:00",
-      "status": "scheduled"
+      "status": "scheduled-maybe"
     },
     {
       "timeSlot": "04:00 - 05:00",
-      "status": "scheduled"
+      "status": "scheduled-maybe"
     },
     {
       "timeSlot": "05:00 - 06:00",
-      "status": "scheduled-maybe"
+      "status": "non-scheduled"
     },
     {
       "timeSlot": "06:00 - 07:00",
-      "status": "scheduled-maybe"
+      "status": "non-scheduled"
     },
     {
       "timeSlot": "07:00 - 08:00",
-      "status": "scheduled-maybe"
+      "status": "scheduled"
     },
     {
       "timeSlot": "08:00 - 09:00",
-      "status": "non-scheduled"
+      "status": "scheduled"
     },
     {
       "timeSlot": "09:00 - 10:00",
-      "status": "non-scheduled"
+      "status": "scheduled"
     },
     {
       "timeSlot": "10:00 - 11:00",
@@ -53,35 +53,35 @@
     },
     {
       "timeSlot": "11:00 - 12:00",
-      "status": "scheduled"
+      "status": "scheduled-maybe"
     },
     {
       "timeSlot": "12:00 - 13:00",
-      "status": "scheduled"
+      "status": "scheduled-maybe"
     },
     {
       "timeSlot": "13:00 - 14:00",
-      "status": "scheduled"
+      "status": "scheduled-maybe"
     },
     {
       "timeSlot": "14:00 - 15:00",
-      "status": "scheduled-maybe"
+      "status": "non-scheduled"
     },
     {
       "timeSlot": "15:00 - 16:00",
-      "status": "scheduled-maybe"
+      "status": "non-scheduled"
     },
     {
       "timeSlot": "16:00 - 17:00",
-      "status": "scheduled-maybe"
+      "status": "scheduled"
     },
     {
       "timeSlot": "17:00 - 18:00",
-      "status": "non-scheduled"
+      "status": "scheduled"
     },
     {
       "timeSlot": "18:00 - 19:00",
-      "status": "non-scheduled"
+      "status": "scheduled"
     },
     {
       "timeSlot": "19:00 - 20:00",
@@ -89,19 +89,19 @@
     },
     {
       "timeSlot": "20:00 - 21:00",
-      "status": "scheduled"
+      "status": "scheduled-maybe"
     },
     {
       "timeSlot": "21:00 - 22:00",
-      "status": "scheduled"
+      "status": "scheduled-maybe"
     },
     {
       "timeSlot": "22:00 - 23:00",
-      "status": "scheduled"
+      "status": "scheduled-maybe"
     },
     {
       "timeSlot": "23:00 - 24:00",
-      "status": "scheduled-maybe"
+      "status": "non-scheduled"
     }
   ]
 }

@@ -185,19 +185,33 @@ return (
               Оновити статус
             </button>
           </form>
-        ) : (
-          <div className="infrastructure-status">
-            <p className="status-item">
-              Статус вантажного ліфта: <span>{infrastructure.cargoElevatorStatus}</span>
-            </p>
-            <p className="status-item">
-              Статус пасажирського ліфта: <span>{infrastructure.passengerElevatorStatus}</span>
-            </p>
-            <p className="status-item">
-              Статус комунальних послуг: <span>{infrastructure.utilityStatus}</span>
-            </p>
-          </div>
-        )}
+) : (
+  <div className="infrastructure-status">
+    <table className="status-table">
+      <thead>
+        <tr>
+          <th>Категорія</th>
+          <th>Статус</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Вантажний ліфт</td>
+          <td>{infrastructure.cargoElevatorStatus}</td>
+        </tr>
+        <tr>
+          <td>Пасажирський ліфт</td>
+          <td>{infrastructure.passengerElevatorStatus}</td>
+        </tr>
+        <tr>
+          <td>Комунальні послуги</td>
+          <td>{infrastructure.utilityStatus}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+)}
+
 
         <div className="infrastructure-statistics">
           <h3 className="statistics-title">Статистика споживання</h3>

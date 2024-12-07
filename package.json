@@ -4,10 +4,25 @@
   "description": "Magister degree work",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon server/server.js",
     "start": "node server/server.js",
     "server": "nodemon server/server.js",
     "client": "cd client && cross-env PORT=3000 parcel public/index.html --open",
+
+
+  "benchmark-create-ad": "ab -c 10 -n 1000 http://localhost:5000/api/ads/create",
+  "benchmark-active-ads": "ab -c 10 -n 1000 http://localhost:5000/api/ads/active",
+  "benchmark-pending-ads": "ab -c 10 -n 1000 http://localhost:5000/api/ads/pending",
+  "benchmark-active-collections": "ab -c 10 -n 1000 http://localhost:5000/api/collections/active-collections",
+  "benchmark-consumption": "ab -c 10 -n 1000 http://localhost:5000/api/consumption",
+  "benchmark-infrastructure-status": "ab -c 10 -n 1000 http://localhost:5000/api/infrastructure",
+  "benchmark-osbb-statistics": "ab -c 10 -n 1000 http://localhost:5000/api/statistics",
+  "benchmark-payments": "ab -c 10 -n 1000 http://localhost:5000/api/payments/create",
+  "benchmark-schedule": "ab -c 10 -n 1000 http://localhost:5000/api/schedule",
+  "benchmark-voting": "ab -c 10 -n 1000 http://localhost:5000/api/votes",
+  "benchmark-all": "npm run benchmark-create-ad && npm run benchmark-active-ads && npm run benchmark-pending-ads && npm run benchmark-active-collections && npm run benchmark-consumption && npm run benchmark-infrastructure-status && npm run benchmark-osbb-statistics && npm run benchmark-payments && npm run benchmark-schedule && npm run benchmark-voting",
+
+
+    "test": "concurrently \"npm run client\" \"npm run server\" \"sleep 10 && npm run benchmark-all\"",
     "dev": "concurrently \"npm run client\" \"npm run server\""
   },
   "keywords": [],
